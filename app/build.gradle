@@ -1,0 +1,74 @@
+plugins {
+  id 'com.android.application'
+  id 'org.jetbrains.kotlin.android'
+  id 'com.mikepenz.aboutlibraries.plugin'
+}
+
+android {
+  compileSdk 33
+
+  defaultConfig {
+    applicationId "de.kauker.unofficial.grocy"
+    minSdk 26
+    targetSdk 30
+    versionCode 1
+    versionName "1.0"
+    vectorDrawables {
+      useSupportLibrary true
+    }
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled true
+      shrinkResources true
+      signingConfig signingConfigs.debug
+      proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+    }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
+  buildFeatures {
+    compose true
+  }
+  composeOptions {
+    kotlinCompilerExtensionVersion libs.versions.compose.compiler.get()
+  }
+  packagingOptions {
+    resources {
+      excludes += "/META-INF/{AL2.0,LGPL2.1}"
+    }
+  }
+}
+
+dependencies {
+  /* legal stuff */
+  implementation "com.mikepenz:aboutlibraries-core:10.5.1"
+
+  /* http */
+  implementation "com.squareup.okhttp3:okhttp:4.10.0"
+
+  /* compose */
+  implementation libs.androidx.activity.compose
+  implementation libs.compose.ui.tooling.preview
+
+  /* wear compose */
+  implementation "androidx.compose.material:material-icons-extended:$compose_version"
+  implementation libs.wear.compose.material
+
+  /* foundation */
+  implementation libs.wear.compose.foundation
+  implementation "androidx.compose.ui:ui:$compose_version"
+  implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+  implementation 'androidx.wear:wear-remote-interactions:1.0.0'
+
+  /* debug */
+  debugImplementation libs.compose.ui.tooling
+  debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+}

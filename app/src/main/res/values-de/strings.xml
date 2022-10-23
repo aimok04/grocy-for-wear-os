@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Grocy for Wear OS</string>
+
+    <!-- misc -->
+    <string name="install">Installieren</string>
+
+    <string name="open">Öffnen</string>
+    <string name="close">Schließen</string>
+
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+
+    <string name="settings">Einstellungen</string>
+    <string name="sign_out">Abmelden</string>
+
+    <string name="reset">Zurücksetzen</string>
+
+    <string name="move_up">Nach oben</string>
+    <string name="move_down">Nach unten</string>
+
+    <!-- dialogs -->
+    <string name="dialog_confirmation_title">Bestätigung</string>
+
+    <!-- MainActivity -->
+    <string name="main_title">Einkaufsliste</string>
+    <string name="main_prompt_connection_issues">Es gibt Probleme mit der Verbindung. Stimmen die Verbindungsdaten?</string>
+
+    <string name="main_dialog_logout_message">Möchtest du dich wirklich abmelden?</string>
+
+    <string name="main_list_unsorted">Unsortiert</string>
+    <string name="main_list_done">Erledigt</string>
+
+    <!-- SettingsActivity -->
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_button_product_groups_order">Produktgruppen-Reihenfolge</string>
+    <string name="settings_button_legal_stuff">Rechtliches</string>
+
+    <!-- ProductGroupsOrderActivity -->
+    <string name="productgroups_title">Produktgruppen</string>
+
+    <!-- LegalActivity -->
+    <string name="legal_title">Bibliotheken</string>
+
+    <!-- SetupActivity -->
+    <string name="setup_title">Einrichtung</string>
+    <string name="setup_prompt_open_app">Bitte öffne die Grocy for WearOS Begleiter-App auf deinem Handy, um diese App einzurichten.</string>
+    <string name="setup_prompt_save_credentials">Möchtest du diese Verbindungsdaten speichern?</string>
+</resources>

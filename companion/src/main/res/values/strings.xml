@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Grocy for Wear OS</string>
+
+    <!-- General -->
+    <string name="action_back">Back</string>
+
+    <!-- MainActivity -->
+    <string name="main_field_api_url">Api url</string>
+    <string name="main_field_api_token">Api token</string>
+    <string name="main_button_send">Send</string>
+
+    <string name="main_prompt_sent">Message sent! Check your watch.</string>
+    <string name="main_prompt_failed">Failed. Is your watch connnected?</string>
+
+    <!-- LegalActivity -->
+    <string name="legal_title">Libraries</string>
+</resources>

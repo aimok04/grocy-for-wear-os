@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Grocy for Wear OS</string>
+
+    <!-- misc -->
+    <string name="install">Install</string>
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="settings">Settings</string>
+    <string name="sign_out">Sign out</string>
+
+    <string name="reset">Reset</string>
+
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
+
+    <!-- dialogs -->
+    <string name="dialog_confirmation_title">Confirmation</string>
+
+    <!-- MainActivity -->
+    <string name="main_title">Shopping list</string>
+    <string name="main_prompt_connection_issues">Could not connect to server. Are your credentials valid?</string>
+
+    <string name="main_dialog_logout_message">Do you really want to sign out?</string>
+
+    <string name="main_list_unsorted">Unsorted</string>
+    <string name="main_list_done">Done</string>
+
+    <!-- SettingsActivity -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_button_product_groups_order">Product groups order</string>
+    <string name="settings_button_legal_stuff">Legal stuff</string>
+
+    <!-- ProductGroupsOrderActivity -->
+    <string name="productgroups_title">Product groups</string>
+
+    <!-- LegalActivity -->
+    <string name="legal_title">Libraries</string>
+
+    <!-- SetupActivity -->
+    <string name="setup_title">Setup</string>
+    <string name="setup_prompt_open_app">Please open the Grocy for WearOS Companion app on your phone to set up this app.</string>
+    <string name="setup_prompt_save_credentials">Do you want to save these credentials?</string>
+</resources>
