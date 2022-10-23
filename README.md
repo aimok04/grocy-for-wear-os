@@ -16,7 +16,7 @@ Currently the app only works as a viewer for shopping lists, but more features m
 	1. Enable the developer settings (`Settings -> System -> About -> Versions -> Tap on the build number until the "you are now a developer" message appears`)
 	2. Enable debugging over wifi (`Settings -> Developer options -> Wireless debugging -> Enable`)
 	3. Enter pairing mode (`Settings -> Developer options -> Wireless debugging -> Pair new device`)
-	4. Pair device on computer (`# adb pair {ip and port shown on watch display}`)
+	4. Pair device on computer (`# adb pair {ip}:{port}`)
 		1. Enter the pairing code shown on your watch.
 	5. Get the adb ip and port (`Settings -> Developer options -> Wireless debugging -> IP address & port`)
 	6. Connect your device via adb (`# adb connect {ip}:{port}`)
