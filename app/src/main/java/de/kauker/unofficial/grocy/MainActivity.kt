@@ -12,9 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -201,7 +204,7 @@ fun ShoppingListEntryCard(item: ShoppingListGrocyItemEntry, viewModel: MainViewM
     val alpha = if (entry.done) 0.5f else 1f
 
     TitleCard(
-        title = { Text(entry.product!!.name) },
+        title = { Text(if(entry.product != null) entry.product!!.name else entry.note) },
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
             .alpha(alpha),
@@ -209,6 +212,15 @@ fun ShoppingListEntryCard(item: ShoppingListGrocyItemEntry, viewModel: MainViewM
             viewModel.toggleShoppingListEntryDoneStatus(entry)
         }
     ) {
+        if(entry.product != null && entry.note.isNotEmpty()) {
+            Text(
+                entry.note,
+                fontSize = 12.sp,
+                fontFamily = FontFamily.Serif,
+                fontStyle = FontStyle.Italic
+            )
+        }
+
         val quantityUnit =
             if (entry.quantityUnit == null) "" else if (entry.amount == "1") entry.quantityUnit?.name else entry.quantityUnit?.namePlural
         Text(entry.amount + " " + quantityUnit)
