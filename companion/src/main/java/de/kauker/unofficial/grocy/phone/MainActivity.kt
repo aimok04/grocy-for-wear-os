@@ -8,6 +8,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Key
 import androidx.compose.material.icons.rounded.MenuBook
@@ -22,6 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
@@ -99,6 +103,11 @@ fun MainScaffold(state: MainViewModel.State, viewModel: MainViewModel, context: 
             ) {
                 if (state is MainViewModel.State.Default) {
                     OutlinedTextField(
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Uri,
+                            imeAction = ImeAction.Next
+                        ),
+                        modifier = Modifier.fillMaxWidth(0.8f),
                         value = apiUrl,
                         leadingIcon = { Icon(Icons.Rounded.Public, "Url") },
                         label = { Text(stringResource(id = R.string.main_field_api_url)) },
@@ -106,6 +115,16 @@ fun MainScaffold(state: MainViewModel.State, viewModel: MainViewModel, context: 
                     )
 
                     OutlinedTextField(
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Send
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onSend = {
+                                viewModel.sendIntent(apiUrl, apiToken)
+                            }
+                        ),
+                        modifier = Modifier.fillMaxWidth(0.8f),
                         value = apiToken,
                         leadingIcon = { Icon(Icons.Rounded.Key, "Token") },
                         label = { Text(stringResource(id = R.string.main_field_api_token)) },
