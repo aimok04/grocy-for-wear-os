@@ -79,7 +79,7 @@ class MainViewModel constructor(apiUrl: String, apiToken: String, application: A
                 continue
             }
 
-            if (entry.product!!.productGroup == null) {
+            if (entry.product?.productGroup == null) {
                 unsorted.add(entry)
                 continue
             }
