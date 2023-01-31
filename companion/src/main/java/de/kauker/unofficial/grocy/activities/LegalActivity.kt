@@ -1,4 +1,4 @@
-package de.kauker.unofficial.grocy.phone.activities
+package de.kauker.unofficial.grocy.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -13,9 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import de.kauker.unofficial.grocy.R
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
-import de.kauker.unofficial.grocy.phone.R
-import de.kauker.unofficial.grocy.phone.ui.theme.GrocyTheme
+import de.kauker.unofficial.grocy.theme.GrocyTheme
 
 class LegalActivity : ComponentActivity() {
 

@@ -5,15 +5,15 @@ plugins {
 }
 
 android {
-  namespace 'de.kauker.unofficial.grocy.phone'
+  namespace 'de.kauker.unofficial.grocy'
   compileSdk 33
 
   defaultConfig {
-    applicationId "de.kauker.unofficial.grocy.phone"
+    applicationId "de.kauker.unofficial.grocy"
     minSdk 24
     targetSdk 33
-    versionCode 2
-    versionName "1.1"
+    versionCode 3
+    versionName "1.1m"
 
     vectorDrawables {
       useSupportLibrary true

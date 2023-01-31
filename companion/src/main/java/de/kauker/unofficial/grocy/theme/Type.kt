@@ -1,4 +1,4 @@
-package de.kauker.unofficial.grocy.phone.ui.theme
+package de.kauker.unofficial.grocy.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

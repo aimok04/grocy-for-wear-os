@@ -1,4 +1,4 @@
-package de.kauker.unofficial.grocy.phone.ui.theme
+package de.kauker.unofficial.grocy.theme
 
 import android.app.Activity
 import android.os.Build

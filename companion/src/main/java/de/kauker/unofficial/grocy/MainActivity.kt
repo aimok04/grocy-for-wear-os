@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package de.kauker.unofficial.grocy.phone
+package de.kauker.unofficial.grocy
 
 import android.content.Context
 import android.content.Intent
@@ -31,8 +31,8 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import de.kauker.unofficial.grocy.phone.activities.LegalActivity
-import de.kauker.unofficial.grocy.phone.ui.theme.GrocyTheme
+import de.kauker.unofficial.grocy.activities.LegalActivity
+import de.kauker.unofficial.grocy.theme.GrocyTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {

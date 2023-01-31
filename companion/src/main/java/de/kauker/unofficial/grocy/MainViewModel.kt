@@ -1,4 +1,4 @@
-package de.kauker.unofficial.grocy.phone
+package de.kauker.unofficial.grocy
 
 import android.app.Application
 import android.content.Intent

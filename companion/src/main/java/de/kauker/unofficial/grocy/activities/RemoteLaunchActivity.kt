@@ -1,10 +1,10 @@
-package de.kauker.unofficial.grocy.phone.activities
+package de.kauker.unofficial.grocy.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import de.kauker.unofficial.grocy.phone.MainActivity
+import de.kauker.unofficial.grocy.MainActivity
 
 @SuppressLint("CustomSplashScreen")
 class RemoteLaunchActivity : ComponentActivity() {
