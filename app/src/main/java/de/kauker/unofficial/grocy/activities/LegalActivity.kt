@@ -11,6 +11,7 @@ import androidx.compose.material.icons.rounded.MenuBook
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,12 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.*
 import androidx.wear.compose.material.dialog.Alert
 import androidx.wear.compose.material.dialog.Dialog
+import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
+import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.util.withContext
 import de.kauker.unofficial.grocy.R
 import de.kauker.unofficial.grocy.theme.WearAppTheme
-import de.kauker.unofficial.grocy.ui.ScalingLazyColumnWithRSB
 
 class LegalActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +43,7 @@ class LegalActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
 fun LibrariesList(libraries: List<Library>) {
     var showDetailsDialog by remember { mutableStateOf(false) }
@@ -48,7 +52,14 @@ fun LibrariesList(libraries: List<Library>) {
         AlertLegalDetails(selectedLibrary) { showDetailsDialog = false }
     }
 
-    ScalingLazyColumnWithRSB {
+    val focusRequester = rememberActiveFocusRequester()
+    val scrollableState = rememberScalingLazyListState()
+
+    ScalingLazyColumn(
+        modifier = Modifier.focusRequester(focusRequester)
+            .rotaryWithScroll(focusRequester, scrollableState),
+        state = scrollableState
+    ) {
         item {
             Text(
                 modifier = Modifier

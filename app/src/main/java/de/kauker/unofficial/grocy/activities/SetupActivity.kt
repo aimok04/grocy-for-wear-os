@@ -12,22 +12,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.wear.compose.material.Chip
-import androidx.wear.compose.material.ChipDefaults
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.Text
+import androidx.wear.compose.material.*
 import androidx.wear.remote.interactions.RemoteActivityHelper
+import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
+import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import de.kauker.unofficial.grocy.INSTALL_COMPANION_APP_URL
 import de.kauker.unofficial.grocy.MainActivity
 import de.kauker.unofficial.grocy.R
 import de.kauker.unofficial.grocy.theme.WearAppTheme
-import de.kauker.unofficial.grocy.ui.ScalingLazyColumnWithRSB
 import java.net.URLDecoder
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.launch
@@ -77,9 +77,16 @@ fun SetupTitle() {
     )
 }
 
+@OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
 fun SetupConfirmationComp(activity: SetupActivity, apiUrl: String, apiToken: String) {
-    ScalingLazyColumnWithRSB(
+    val focusRequester = rememberActiveFocusRequester()
+    val scrollableState = rememberScalingLazyListState()
+
+    ScalingLazyColumn(
+        modifier = Modifier.focusRequester(focusRequester)
+            .rotaryWithScroll(focusRequester, scrollableState),
+        state = scrollableState,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item { SetupTitle() }
@@ -139,9 +146,16 @@ fun SetupConfirmationComp(activity: SetupActivity, apiUrl: String, apiToken: Str
     }
 }
 
+@OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
 fun SetupComp(setupViewModel: SetupViewModel) {
-    ScalingLazyColumnWithRSB(
+    val focusRequester = rememberActiveFocusRequester()
+    val scrollableState = rememberScalingLazyListState()
+
+    ScalingLazyColumn(
+        modifier = Modifier.focusRequester(focusRequester)
+            .rotaryWithScroll(focusRequester, scrollableState),
+        state = scrollableState,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item { SetupTitle() }

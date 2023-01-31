@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -24,12 +25,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.wear.compose.material.*
 import androidx.wear.compose.material.dialog.Alert
 import androidx.wear.compose.material.dialog.Dialog
+import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
+import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import de.kauker.unofficial.grocy.activities.SettingsActivity
 import de.kauker.unofficial.grocy.activities.SetupActivity
 import de.kauker.unofficial.grocy.models.ShoppingListGrocyItemEntry
 import de.kauker.unofficial.grocy.models.ShoppingListTitleEntry
 import de.kauker.unofficial.grocy.theme.WearAppTheme
-import de.kauker.unofficial.grocy.ui.ScalingLazyColumnWithRSB
 import kotlinx.coroutines.launch
 
 const val ACTION_SIGN_OUT = 0
@@ -88,6 +91,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
 fun WearApp(
     state: MainViewModel.State,
@@ -118,7 +122,14 @@ fun WearApp(
                     CircularProgressIndicator()
                 }
             } else {
-                ScalingLazyColumnWithRSB {
+                val focusRequester = rememberActiveFocusRequester()
+                val scrollableState = rememberScalingLazyListState()
+
+                ScalingLazyColumn(
+                    modifier = Modifier.focusRequester(focusRequester)
+                        .rotaryWithScroll(focusRequester, scrollableState),
+                    state = scrollableState
+                ) {
                     item {
                         /* page title */
                         Text(

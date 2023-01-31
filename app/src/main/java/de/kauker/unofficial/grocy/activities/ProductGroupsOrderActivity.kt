@@ -16,15 +16,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.*
 import androidx.wear.compose.material.*
+import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
+import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import de.kauker.unofficial.grocy.R
 import de.kauker.unofficial.grocy.theme.WearAppTheme
-import de.kauker.unofficial.grocy.ui.ScalingLazyColumnWithRSB
 import de.kauker.unofficial.sdk.grocy.GrocyClient
 import de.kauker.unofficial.sdk.grocy.models.GrocyProductGroup
 import kotlinx.coroutines.Dispatchers
@@ -69,6 +72,7 @@ class ProductGroupsOrderActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
 fun ProductGroupsOrderComp(
     state: ProductGroupsOrderViewModel.State,
@@ -80,9 +84,13 @@ fun ProductGroupsOrderComp(
     if (state is ProductGroupsOrderViewModel.State.Loading) {
         CircularProgressIndicator()
     } else {
-        ScalingLazyColumnWithRSB(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            state = scalingLazyListState
+        val focusRequester = rememberActiveFocusRequester()
+
+        ScalingLazyColumn(
+            modifier = Modifier.focusRequester(focusRequester)
+                .rotaryWithScroll(focusRequester, scalingLazyListState),
+            state = scalingLazyListState,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
                 Text(

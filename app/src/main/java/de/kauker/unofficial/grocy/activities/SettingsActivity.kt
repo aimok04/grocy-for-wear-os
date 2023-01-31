@@ -10,17 +10,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.material.Chip
-import androidx.wear.compose.material.ChipDefaults
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.Text
+import androidx.wear.compose.material.*
+import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
+import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import de.kauker.unofficial.grocy.R
 import de.kauker.unofficial.grocy.theme.WearAppTheme
-import de.kauker.unofficial.grocy.ui.ScalingLazyColumnWithRSB
 
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +34,16 @@ class SettingsActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
 fun SettingsComp(context: Context) {
-    ScalingLazyColumnWithRSB(
+    val focusRequester = rememberActiveFocusRequester()
+    val scrollableState = rememberScalingLazyListState()
+
+    ScalingLazyColumn(
+        modifier = Modifier.focusRequester(focusRequester)
+            .rotaryWithScroll(focusRequester, scrollableState),
+        state = scrollableState,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
