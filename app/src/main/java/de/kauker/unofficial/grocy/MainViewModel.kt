@@ -3,6 +3,9 @@ package de.kauker.unofficial.grocy
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import de.kauker.unofficial.grocy.models.ShoppingListEntry
@@ -11,6 +14,7 @@ import de.kauker.unofficial.grocy.models.ShoppingListTitleEntry
 import de.kauker.unofficial.sdk.grocy.GrocyClient
 import de.kauker.unofficial.sdk.grocy.models.GrocyProductGroup
 import de.kauker.unofficial.sdk.grocy.models.GrocyShoppingListEntry
+import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,12 +43,14 @@ class MainViewModel constructor(apiUrl: String, apiToken: String, application: A
     private var stateData = StateData()
     private var shoppingListEntries = ArrayList<GrocyShoppingListEntry>()
 
+    var cachedDate by mutableStateOf<Date?>(null)
+
     private var settingsSp: SharedPreferences = getApplication<Application>().getSharedPreferences(
         "settings",
         ComponentActivity.MODE_PRIVATE
     )
 
-    private var grocyClient = GrocyClient(apiUrl, apiToken)
+    private var grocyClient = GrocyClient(application, apiUrl, apiToken)
 
     init {
         load()
@@ -56,8 +62,20 @@ class MainViewModel constructor(apiUrl: String, apiToken: String, application: A
 
             withContext(Dispatchers.IO) {
                 try {
-                    shoppingListEntries = grocyClient.fetchShoppingListEntries()
+                    shoppingListEntries = grocyClient.fetchShoppingListEntries(true)
                     reloadUi()
+
+                    cachedDate = grocyClient.fetchCacheDate()
+
+                    try {
+                        shoppingListEntries = grocyClient.fetchShoppingListEntries(false)
+                        reloadUi()
+
+                        cachedDate = null
+                    } catch (throwable: Throwable) {
+                        throwable.printStackTrace()
+                        _state.emit(State.ConnectionIssue)
+                    }
                 } catch (throwable: Throwable) {
                     throwable.printStackTrace()
                     _state.emit(State.ConnectionIssue)

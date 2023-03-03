@@ -1,10 +1,18 @@
 package de.kauker.unofficial.sdk.grocy
 
+import android.content.Context
 import de.kauker.unofficial.sdk.grocy.models.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import okhttp3.OkHttpClient
 import org.json.JSONArray
 
-class GrocyClient(serverUrl: String, apiToken: String) {
+class GrocyClient(
+    context: Context,
+    val serverUrl: String,
+    val apiToken: String
+) {
 
     val OBJECTS_LOCATIONS = HashMap<String, GrocyLocation>()
     val OBJECTS_PRODUCT_GROUPS = HashMap<String, GrocyProductGroup>()
@@ -13,21 +21,17 @@ class GrocyClient(serverUrl: String, apiToken: String) {
     val OBJECTS_PRODUCTS = HashMap<String, GrocyProduct>()
     val OBJECTS_SHOPPING_LIST_ENTRIES = HashMap<String, GrocyShoppingListEntry>()
 
-    val serverUrl: String
-    val apiToken: String
+    val okHttpClient: OkHttpClient = OkHttpClient()
+    val cache = context.getSharedPreferences("grocyCache", Context.MODE_PRIVATE)
 
-    val okHttpClient: OkHttpClient
-
-    init {
-        this.serverUrl = serverUrl
-        this.apiToken = apiToken
-
-        this.okHttpClient = OkHttpClient()
+    fun fetchCacheDate() : Date? {
+        val time = cache.getLong("latestCacheDate", 0L)
+        return if(time != 0L) Date(time) else null
     }
 
-    fun fetchShoppingListEntries(): ArrayList<GrocyShoppingListEntry> {
+    fun fetchShoppingListEntries(cached: Boolean): ArrayList<GrocyShoppingListEntry> {
         val list = ArrayList<GrocyShoppingListEntry>()
-        val json = JSONArray(GrocyRequest(this).get("/api/objects/shopping_list").body!!.string())
+        val json = JSONArray(GrocyRequest(this).get("/api/objects/shopping_list", cached))
 
         var i = 0
         while (!json.isNull(i)) {
@@ -47,13 +51,13 @@ class GrocyClient(serverUrl: String, apiToken: String) {
 
         for (entry in list) {
             if (OBJECTS_PRODUCTS.containsKey(entry._productId)) continue
-            fetchProducts()
+            fetchProducts(cached)
             break
         }
 
         for (entry in list) {
             if (OBJECTS_QUANTITY_UNITS.containsKey(entry._quantityUnitId)) continue
-            fetchQuantityUnits()
+            fetchQuantityUnits(cached)
             break
         }
 
@@ -67,9 +71,9 @@ class GrocyClient(serverUrl: String, apiToken: String) {
         return list
     }
 
-    private fun fetchProducts(): List<GrocyProduct> {
+    private fun fetchProducts(cached: Boolean): List<GrocyProduct> {
         val list = ArrayList<GrocyProduct>()
-        val json = JSONArray(GrocyRequest(this).get("/api/objects/products").body!!.string())
+        val json = JSONArray(GrocyRequest(this).get("/api/objects/products", cached))
 
         var i = 0
         while (!json.isNull(i)) {
@@ -91,13 +95,13 @@ class GrocyClient(serverUrl: String, apiToken: String) {
             if (OBJECTS_LOCATIONS.containsKey(product._locationId)
                 && OBJECTS_LOCATIONS.containsKey(product._shoppingLocationId)
             ) continue
-            fetchLocations()
+            fetchLocations(cached)
             break
         }
 
         for (product in list) {
             if (OBJECTS_PRODUCT_GROUPS.containsKey(product._productGroupId)) continue
-            fetchProductGroups()
+            fetchProductGroups(cached)
             break
         }
 
@@ -105,7 +109,7 @@ class GrocyClient(serverUrl: String, apiToken: String) {
             if (OBJECTS_QUANTITY_UNITS.containsKey(product._quantityUnitStockId)
                 && OBJECTS_QUANTITY_UNITS.containsKey(product._quantityUnitPurchaseId)
             ) continue
-            fetchQuantityUnits()
+            fetchQuantityUnits(cached)
             break
         }
 
@@ -126,9 +130,9 @@ class GrocyClient(serverUrl: String, apiToken: String) {
         return list
     }
 
-    private fun fetchQuantityUnits(): List<GrocyQuantityUnit> {
+    private fun fetchQuantityUnits(cached: Boolean): List<GrocyQuantityUnit> {
         val list = ArrayList<GrocyQuantityUnit>()
-        val json = JSONArray(GrocyRequest(this).get("/api/objects/quantity_units").body!!.string())
+        val json = JSONArray(GrocyRequest(this).get("/api/objects/quantity_units", cached))
 
         var i = 0
         while (!json.isNull(i)) {
@@ -149,9 +153,9 @@ class GrocyClient(serverUrl: String, apiToken: String) {
         return list
     }
 
-    fun fetchProductGroups(): List<GrocyProductGroup> {
+    fun fetchProductGroups(cached: Boolean): List<GrocyProductGroup> {
         val list = ArrayList<GrocyProductGroup>()
-        val json = JSONArray(GrocyRequest(this).get("/api/objects/product_groups").body!!.string())
+        val json = JSONArray(GrocyRequest(this).get("/api/objects/product_groups", cached))
 
         var i = 0
         while (!json.isNull(i)) {
@@ -172,9 +176,9 @@ class GrocyClient(serverUrl: String, apiToken: String) {
         return list
     }
 
-    private fun fetchLocations(): List<GrocyLocation> {
+    private fun fetchLocations(cached: Boolean): List<GrocyLocation> {
         val list = ArrayList<GrocyLocation>()
-        val json = JSONArray(GrocyRequest(this).get("/api/objects/locations").body!!.string())
+        val json = JSONArray(GrocyRequest(this).get("/api/objects/locations", cached))
 
         var i = 0
         while (!json.isNull(i)) {

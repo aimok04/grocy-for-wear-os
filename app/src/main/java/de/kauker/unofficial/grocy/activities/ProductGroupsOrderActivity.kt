@@ -197,7 +197,7 @@ class ProductGroupsOrderViewModel constructor(
         ComponentActivity.MODE_PRIVATE
     )
 
-    private var grocyClient = GrocyClient(apiUrl, apiToken)
+    private var grocyClient = GrocyClient(application, apiUrl, apiToken)
 
     init {
         load()
@@ -213,7 +213,7 @@ class ProductGroupsOrderViewModel constructor(
     private suspend fun fetchProductGroups() {
         withContext(Dispatchers.IO) {
             try {
-                var productGroupList = grocyClient.fetchProductGroups()
+                var productGroupList = grocyClient.fetchProductGroups(false)
 
                 productGroupList = productGroupList.sortedBy { it.name }
 

@@ -31,6 +31,8 @@
     <string name="main_list_unsorted">Unsorted</string>
     <string name="main_list_done">Done</string>
 
+    <string name="main_last_refresh">Last refresh</string>
+
     <!-- SettingsActivity -->
     <string name="settings_title">Settings</string>
     <string name="settings_button_product_groups_order">Product groups order</string>

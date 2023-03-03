@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Logout
+import androidx.compose.material.icons.rounded.WifiOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +34,7 @@ import de.kauker.unofficial.grocy.activities.SetupActivity
 import de.kauker.unofficial.grocy.models.ShoppingListGrocyItemEntry
 import de.kauker.unofficial.grocy.models.ShoppingListTitleEntry
 import de.kauker.unofficial.grocy.theme.WearAppTheme
+import java.text.SimpleDateFormat
 import kotlinx.coroutines.launch
 
 const val ACTION_SIGN_OUT = 0
@@ -126,7 +128,8 @@ fun WearApp(
                 val scrollableState = rememberScalingLazyListState()
 
                 ScalingLazyColumn(
-                    modifier = Modifier.focusRequester(focusRequester)
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
                         .rotaryWithScroll(focusRequester, scrollableState),
                     state = scrollableState
                 ) {
@@ -144,6 +147,35 @@ fun WearApp(
                     }
 
                     if (state is MainViewModel.State.Data) {
+                        /* shown if data is cached */
+                        if(viewModel.cachedDate != null) {
+                            item {
+                                Column {
+                                    val dateStr = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(viewModel.cachedDate!!)
+
+                                    Spacer(Modifier.height(8.dp))
+
+                                    Text(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .alpha(0.7f),
+                                        text = stringResource(id = R.string.main_last_refresh),
+                                        style = MaterialTheme.typography.caption1,
+                                        textAlign = TextAlign.Center
+                                    )
+
+                                    Text(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .alpha(0.7f),
+                                        text = dateStr,
+                                        style = MaterialTheme.typography.caption3,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+                        }
+
                         items(state.data!!.shoppingListItems.size) {
                             val item = state.data.shoppingListItems[it]
 
@@ -203,6 +235,22 @@ fun WearApp(
                             )
                         }
                     }
+                }
+            }
+
+            if(viewModel.cachedDate != null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    CompactChip(
+                        modifier = Modifier.padding(bottom = 12.dp),
+                        colors = ChipDefaults.secondaryChipColors(),
+                        icon = { Icon(Icons.Rounded.WifiOff, "Offline") },
+                        label = { Text("Offline", Modifier.padding(end = 4.dp)) },
+                        onClick = { }
+                    )
                 }
             }
         }

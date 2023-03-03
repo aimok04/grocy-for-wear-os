@@ -31,6 +31,8 @@
     <string name="main_list_unsorted">Unsortiert</string>
     <string name="main_list_done">Erledigt</string>
 
+    <string name="main_last_refresh">Zuletzt abgerufen</string>
+
     <!-- SettingsActivity -->
     <string name="settings_title">Einstellungen</string>
     <string name="settings_button_product_groups_order">Produktgruppen-Reihenfolge</string>
