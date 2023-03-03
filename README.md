@@ -10,6 +10,15 @@ Currently the app only works as a viewer for shopping lists, but more features m
 - [x] Shopping list
 	- [x] Marking items as done
 	- [x] Reordering product groups
+	
+## Downloads ##
+<a href='https://play.google.com/store/apps/details?id=de.kauker.unofficial.grocy'>
+	<img alt='Download from Google Play' height="80" src='images/badge_download_google.png' />
+</a>
+
+<a href='https://github.com/aimok04/grocy-for-wear-os/releases/latest'>
+	<img alt='Download from Github' height="80" src='images/badge_download_github.png' />
+</a>
 
 ## Installation instructions ##
 1. Download and install the .apk file for Wear OS in the releases tab. The easiest way to install .apk files on Wear OS devices is by using adb;
