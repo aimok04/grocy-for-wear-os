@@ -12,8 +12,8 @@ android {
     applicationId "de.kauker.unofficial.grocy"
     minSdk 24
     targetSdk 33
-    versionCode 5
-    versionName "1.2m"
+    versionCode 7
+    versionName "1.3m"
 
     vectorDrawables {
       useSupportLibrary true
