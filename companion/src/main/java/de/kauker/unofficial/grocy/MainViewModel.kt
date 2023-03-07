@@ -1,21 +1,15 @@
 package de.kauker.unofficial.grocy
 
+import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Intent
-import android.content.Intent.ACTION_VIEW
-import android.content.Intent.CATEGORY_BROWSABLE
-import android.net.Uri
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.wear.remote.interactions.RemoteActivityHelper
-import java.net.URLEncoder
-import kotlinx.coroutines.Dispatchers
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.wearable.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
 
 class MainViewModel constructor(application: Application) : AndroidViewModel(
     application
@@ -32,33 +26,25 @@ class MainViewModel constructor(application: Application) : AndroidViewModel(
     private var _state = MutableStateFlow<State>(State.Default)
     val state = _state.asStateFlow()
 
-    fun sendIntent(apiUrl: String, apiToken: String) {
+    @SuppressLint("VisibleForTests")
+    fun sendIntent(
+        context: Context,
+        apiUrl: String,
+        apiToken: String
+    ) {
         viewModelScope.launch {
             _state.emit(State.Loading)
 
-            try {
-                val json = JSONObject().put("apiUrl", apiUrl).put("apiToken", apiToken)
-
-                RemoteActivityHelper(getApplication()).startRemoteActivity(
-                    Intent(ACTION_VIEW)
-                        .addCategory(CATEGORY_BROWSABLE)
-                        .setData(
-                            Uri.parse(
-                                "gfwo://setup/?data=" + withContext(Dispatchers.IO) {
-                                    URLEncoder.encode(
-                                        json.toString(),
-                                        "UTF-8"
-                                    )
-                                }
-                            )
-                        )
-                ).await()
-
-                _state.emit(State.Success)
-            } catch (throwable: Throwable) {
-                throwable.printStackTrace()
-                _state.emit(State.Failed)
+            val dataClient: DataClient = Wearable.getDataClient(context)
+            val putDataReq: PutDataRequest = PutDataMapRequest.create("/auth").run {
+                dataMap.putString("url", apiUrl)
+                dataMap.putString("token", apiToken)
+                asPutDataRequest()
             }
+
+            val putDataTask: Task<DataItem> = dataClient.putDataItem(putDataReq)
+            putDataTask.addOnSuccessListener { viewModelScope.launch { _state.emit(State.Success) }}
+            putDataTask.addOnFailureListener { viewModelScope.launch { _state.emit(State.Failed) }}
         }
     }
 

@@ -1,5 +1,6 @@
 package de.kauker.unofficial.grocy.activities
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
@@ -9,7 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
@@ -21,6 +22,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.wear.compose.material.*
 import androidx.wear.remote.interactions.RemoteActivityHelper
+import com.google.android.gms.wearable.DataClient
+import com.google.android.gms.wearable.DataEvent
+import com.google.android.gms.wearable.DataMapItem
+import com.google.android.gms.wearable.Wearable
 import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
 import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
 import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
@@ -28,40 +33,18 @@ import de.kauker.unofficial.grocy.INSTALL_COMPANION_APP_URL
 import de.kauker.unofficial.grocy.MainActivity
 import de.kauker.unofficial.grocy.R
 import de.kauker.unofficial.grocy.theme.WearAppTheme
-import java.net.URLDecoder
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 class SetupActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        try {
-            if (intent.dataString != null) {
-                val encodedJson = intent.dataString!!.substring(19)
-                val json = JSONObject(URLDecoder.decode(encodedJson, "UTF-8"))
-
-                val apiUrl = json.getString("apiUrl")
-                val apiToken = json.getString("apiToken")
-
-                setContent {
-                    WearAppTheme {
-                        SetupConfirmationComp(activity = this, apiUrl, apiToken)
-                    }
-                }
-
-                return
-            }
-        } catch (throwable: Throwable) {
-            throwable.printStackTrace()
-        }
-
         val viewModel = SetupViewModel(application)
 
         setContent {
             WearAppTheme {
-                SetupComp(viewModel)
+                SetupComp(this, viewModel)
             }
         }
     }
@@ -84,7 +67,8 @@ fun SetupConfirmationComp(activity: SetupActivity, apiUrl: String, apiToken: Str
     val scrollableState = rememberScalingLazyListState()
 
     ScalingLazyColumn(
-        modifier = Modifier.focusRequester(focusRequester)
+        modifier = Modifier
+            .focusRequester(focusRequester)
             .rotaryWithScroll(focusRequester, scrollableState),
         state = scrollableState,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -146,48 +130,74 @@ fun SetupConfirmationComp(activity: SetupActivity, apiUrl: String, apiToken: Str
     }
 }
 
+@SuppressLint("VisibleForTests")
 @OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
-fun SetupComp(setupViewModel: SetupViewModel) {
-    val focusRequester = rememberActiveFocusRequester()
-    val scrollableState = rememberScalingLazyListState()
+fun SetupComp(activity: SetupActivity, vm: SetupViewModel) {
+    var apiUrl by remember { mutableStateOf<String?>(null) }
+    var apiToken by remember { mutableStateOf<String?>(null) }
 
-    ScalingLazyColumn(
-        modifier = Modifier.focusRequester(focusRequester)
-            .rotaryWithScroll(focusRequester, scrollableState),
-        state = scrollableState,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        item { SetupTitle() }
+    LaunchedEffect(Unit) {
+        val dataClient: DataClient = Wearable.getDataClient(activity)
+        dataClient.addListener{ dataEvents ->
+            dataEvents.forEach { event ->
+                if (event.type == DataEvent.TYPE_CHANGED) {
+                    val dataItemPath = event.dataItem.uri.path ?: ""
+                    if (dataItemPath.startsWith("/auth")) {
+                        val dataMap = DataMapItem.fromDataItem(event.dataItem).dataMap
 
-        item {
-            Text(
-                text = stringResource(id = R.string.setup_prompt_open_app),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
+                        apiUrl = dataMap.getString("url")
+                        apiToken = dataMap.getString("token")
+                    }
+                }
+            }
         }
+    }
 
-        item {
-            Row(
-                Modifier.padding(top = 8.dp)
-            ) {
-                Chip(
-                    modifier = Modifier.padding(end = 4.dp),
-                    label = { Text(stringResource(id = R.string.open)) },
-                    colors = ChipDefaults.gradientBackgroundChipColors(),
-                    onClick = {
-                        setupViewModel.openUriRemotely(Uri.parse("gfwo://open"))
-                    }
+    if(apiUrl != null) {
+        SetupConfirmationComp(activity, apiUrl?: "", apiToken?: "")
+    }else{
+        val focusRequester = rememberActiveFocusRequester()
+        val scrollableState = rememberScalingLazyListState()
+
+        ScalingLazyColumn(
+            modifier = Modifier
+                .focusRequester(focusRequester)
+                .rotaryWithScroll(focusRequester, scrollableState),
+            state = scrollableState,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            item { SetupTitle() }
+
+            item {
+                Text(
+                    text = stringResource(id = R.string.setup_prompt_open_app),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
-                Chip(
-                    modifier = Modifier.padding(start = 4.dp),
-                    label = { Text(stringResource(id = R.string.install)) },
-                    colors = ChipDefaults.secondaryChipColors(),
-                    onClick = {
-                        setupViewModel.openUriRemotely(Uri.parse(INSTALL_COMPANION_APP_URL))
-                    }
-                )
+            }
+
+            item {
+                Row(
+                    Modifier.padding(top = 8.dp)
+                ) {
+                    Chip(
+                        modifier = Modifier.padding(end = 4.dp),
+                        label = { Text(stringResource(id = R.string.open)) },
+                        colors = ChipDefaults.gradientBackgroundChipColors(),
+                        onClick = {
+                            vm.openUriRemotely(Uri.parse("gfwo://open"))
+                        }
+                    )
+                    Chip(
+                        modifier = Modifier.padding(start = 4.dp),
+                        label = { Text(stringResource(id = R.string.install)) },
+                        colors = ChipDefaults.secondaryChipColors(),
+                        onClick = {
+                            vm.openUriRemotely(Uri.parse(INSTALL_COMPANION_APP_URL))
+                        }
+                    )
+                }
             }
         }
     }

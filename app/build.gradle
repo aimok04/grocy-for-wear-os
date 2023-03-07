@@ -73,6 +73,8 @@ dependencies {
 
   implementation "com.google.android.horologist:horologist-compose-layout:0.2.7"
 
+  implementation 'com.google.android.gms:play-services-wearable:18.0.0'
+
   /* debug */
   debugImplementation libs.compose.ui.tooling
   debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
