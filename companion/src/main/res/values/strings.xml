@@ -5,7 +5,7 @@
     <string name="action_back">Back</string>
 
     <!-- MainActivity -->
-    <string name="main_field_api_url">Api url</string>
+    <string name="main_field_api_url">Instance url</string>
     <string name="main_field_api_token">Api token</string>
     <string name="main_button_send">Send</string>
 

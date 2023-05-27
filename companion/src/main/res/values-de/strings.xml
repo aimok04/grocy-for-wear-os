@@ -6,7 +6,7 @@
     <string name="action_back">Zurück</string>
 
     <!-- MainActivity -->
-    <string name="main_field_api_url">Api-Url</string>
+    <string name="main_field_api_url">Instanz-Url</string>
     <string name="main_field_api_token">Api-Token</string>
     <string name="main_button_send">Abschicken</string>
 
