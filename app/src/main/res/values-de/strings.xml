@@ -60,7 +60,9 @@
 
     <!-- SettingsRoute -->
     <string name="settings_title">Einstellungen</string>
+
     <string name="settings_button_product_groups_order">Reihenfolge ändern</string>
+    <string name="settings_button_amoled">Amoled</string>
     <string name="settings_button_legal_stuff">Rechtliches</string>
 
     <!-- SettingsProductGroupsOrderRoute -->

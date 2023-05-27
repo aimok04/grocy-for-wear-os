@@ -83,7 +83,8 @@ fun WearApp(
     vm.rootNavController = navController
 
     WearAppTheme(
-        vm.ambientMode
+        vm.ambientMode,
+        vm.amoledMode
     ) {
         Scaffold(
             Modifier.background(MaterialTheme.colors.background)

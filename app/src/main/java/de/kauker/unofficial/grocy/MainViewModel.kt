@@ -17,7 +17,8 @@ class MainViewModel constructor(apiUrl: String, apiToken: String, application: A
         application
     ) {
 
-    /* ambient mode */
+    /* ui modes */
+    var amoledMode by mutableStateOf(false)
     var ambientMode by mutableStateOf(false)
 
     /* nav */
@@ -33,5 +34,9 @@ class MainViewModel constructor(apiUrl: String, apiToken: String, application: A
     )
 
     var grocyClient = GrocyClient(application, apiUrl, apiToken)
+
+    init {
+        amoledMode = settingsSp.getBoolean("amoledMode", false)
+    }
 
 }

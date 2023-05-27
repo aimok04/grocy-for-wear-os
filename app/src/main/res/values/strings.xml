@@ -60,7 +60,9 @@
 
     <!-- SettingsRoute -->
     <string name="settings_title">Settings</string>
+
     <string name="settings_button_product_groups_order">Change order</string>
+    <string name="settings_button_amoled">Amoled</string>
     <string name="settings_button_legal_stuff">Legal stuff</string>
 
     <!-- SettingsProductGroupsOrderRoute -->

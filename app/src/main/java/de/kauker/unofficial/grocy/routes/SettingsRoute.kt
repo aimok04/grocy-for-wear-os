@@ -80,6 +80,24 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
         }
 
         item {
+            ToggleChip(
+                modifier = Modifier
+                    .padding(top = 4.dp)
+                    .fillMaxWidth(),
+                checked = vm.amoledMode,
+                onCheckedChange = {
+                    vm.amoledMode = !vm.amoledMode
+                    vm.settingsSp.edit().putBoolean("amoledMode", vm.amoledMode).apply()
+                },
+                appIcon = { Icon(Icons.Rounded.DarkMode, stringResource(id = R.string.settings_button_amoled)) },
+                label = { Text(stringResource(id = R.string.settings_button_amoled)) },
+                toggleControl = {
+                    Switch(checked = vm.amoledMode)
+                }
+            )
+        }
+
+        item {
             Chip(
                 modifier = Modifier
                     .padding(top = 4.dp)
