@@ -9,7 +9,6 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.ExpandMore
-import androidx.compose.material.icons.rounded.WifiOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -227,23 +226,6 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                     }
                 }
             }
-        }
-    }
-
-    /* display cache info */
-    if(vm.cachedDate != null) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            CompactChip(
-                modifier = Modifier.padding(bottom = 12.dp),
-                colors = ChipDefaults.secondaryChipColors(),
-                icon = { Icon(Icons.Rounded.WifiOff, "Offline") },
-                label = { Text("Offline", Modifier.padding(end = 4.dp)) },
-                onClick = { }
-            )
         }
     }
 }
