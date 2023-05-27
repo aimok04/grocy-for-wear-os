@@ -7,9 +7,12 @@ Grocy for Wear OS is an unofficial client for the grocy groceries & household ma
 Currently the app only works as a viewer for shopping lists, but more features may be supported in the future (if I'll have time to do that ¯\\\_(ツ)_/¯)
 
 ## Supported features ##
-- [x] Shopping list
+- [x] Shopping lists
 	- [x] Marking items as done
 	- [x] Reordering product groups
+	- [x] Adding new items
+	- [x] Deleting items that are marked as done
+	- [x] Switching between different shopping lists
 	
 ## Downloads ##
 <a href='https://play.google.com/store/apps/details?id=de.kauker.unofficial.grocy'>
