@@ -2,50 +2,40 @@ package de.kauker.unofficial.grocy
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Logout
-import androidx.compose.material.icons.rounded.WifiOff
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.background
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.wear.compose.material.*
-import androidx.wear.compose.material.dialog.Alert
-import androidx.wear.compose.material.dialog.Dialog
-import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
-import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
-import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
-import de.kauker.unofficial.grocy.activities.SettingsActivity
+import androidx.fragment.app.FragmentActivity
+import androidx.navigation.NavGraphBuilder
+import androidx.wear.ambient.AmbientModeSupport
+import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Scaffold
+import androidx.wear.compose.material.ScalingLazyListState
+import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
+import com.google.android.horologist.compose.navscaffold.ScaffoldContext
+import com.google.android.horologist.compose.navscaffold.WearNavScaffold
+import com.google.android.horologist.compose.navscaffold.scalingLazyColumnComposable
 import de.kauker.unofficial.grocy.activities.SetupActivity
-import de.kauker.unofficial.grocy.models.ShoppingListGrocyItemEntry
-import de.kauker.unofficial.grocy.models.ShoppingListTitleEntry
+import de.kauker.unofficial.grocy.models.Route
+import de.kauker.unofficial.grocy.routes.AddProductRoute
+import de.kauker.unofficial.grocy.routes.HomeRoute
+import de.kauker.unofficial.grocy.routes.SelectListRoute
+import de.kauker.unofficial.grocy.routes.SettingsRoute
+import de.kauker.unofficial.grocy.routes.alerts.AlertWelcomeRoute
+import de.kauker.unofficial.grocy.routes.delete.DeleteDoneRoute
+import de.kauker.unofficial.grocy.routes.settings.SettingsLegalRoute
+import de.kauker.unofficial.grocy.routes.settings.SettingsProductGroupsOrderRoute
 import de.kauker.unofficial.grocy.theme.WearAppTheme
-import java.text.SimpleDateFormat
-import kotlinx.coroutines.launch
 
-const val ACTION_SIGN_OUT = 0
-const val ACTION_SHOW_SETTINGS = 1
+class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvider {
 
-class MainActivity : ComponentActivity() {
-
-    private var viewModel: MainViewModel? = null
+    var viewModel: MainViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ambientController = AmbientModeSupport.attach(this)
 
         val sp = getSharedPreferences("credentials", MODE_PRIVATE)
         if (!sp.contains("apiUrl") || !sp.contains("apiToken")) {
@@ -57,277 +47,76 @@ class MainActivity : ComponentActivity() {
         this.viewModel =
             MainViewModel(sp.getString("apiUrl", "")!!, sp.getString("apiToken", "")!!, application)
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel!!.state.collect { state ->
-                    setContent {
-
-                        WearApp(
-                            state,
-                            viewModel!!
-                        ) {
-                            if (it == ACTION_SIGN_OUT) {
-                                getSharedPreferences("credentials", MODE_PRIVATE)
-                                    .edit().remove("apiUrl").remove("apiToken").apply()
-                                startActivity(Intent(this@MainActivity, SetupActivity().javaClass))
-                                finish()
-                            } else if (it == ACTION_SHOW_SETTINGS) {
-                                startActivity(
-                                    Intent(
-                                        this@MainActivity,
-                                        SettingsActivity().javaClass
-                                    )
-                                )
-                            }
-                        }
-
-                    }
-                }
-            }
+        setContent {
+            WearApp(
+                viewModel!!
+            )
         }
     }
 
-    override fun onResume() {
-        viewModel!!.load()
-        super.onResume()
+
+    private lateinit var ambientController: AmbientModeSupport.AmbientController
+    override fun getAmbientCallback(): AmbientModeSupport.AmbientCallback = MyAmbientCallback(this)
+
+    class MyAmbientCallback(
+        private val mainActivity: MainActivity
+    ) : AmbientModeSupport.AmbientCallback() {
+
+        override fun onEnterAmbient(ambientDetails: Bundle?) {
+            mainActivity.viewModel?.ambientMode = true
+        }
+
+        override fun onExitAmbient() {
+            mainActivity.viewModel?.ambientMode = false
+        }
+
+        override fun onUpdateAmbient() {}
     }
+
 }
 
-@OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
 fun WearApp(
-    state: MainViewModel.State,
-    viewModel: MainViewModel,
-    triggerAction: (action: Int) -> Unit
+    vm: MainViewModel
 ) {
-    WearAppTheme {
-        Scaffold(timeText = {
-            TimeText()
-        }) {
-            var showSignOutAlert by remember { mutableStateOf(false) }
-            Dialog(showDialog = showSignOutAlert, onDismissRequest = { showSignOutAlert = false }) {
-                AlertSignOut(onClickPrimary = {
-                    showSignOutAlert = false
-                    triggerAction(ACTION_SIGN_OUT)
-                }, onClickSecondary = {
-                    showSignOutAlert = false
-                })
-            }
+    val navController = rememberSwipeDismissableNavController()
+    vm.rootNavController = navController
 
-            if (state is MainViewModel.State.Loading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            } else {
-                val focusRequester = rememberActiveFocusRequester()
-                val scrollableState = rememberScalingLazyListState()
-
-                ScalingLazyColumn(
-                    modifier = Modifier
-                        .focusRequester(focusRequester)
-                        .rotaryWithScroll(focusRequester, scrollableState),
-                    state = scrollableState
-                ) {
-                    item {
-                        /* page title */
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 26.dp),
-                            text = stringResource(id = R.string.main_title),
-                            style = MaterialTheme.typography.title2
-                                .copy(fontWeight = FontWeight.Bold),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-
-                    if (state is MainViewModel.State.Data) {
-                        /* shown if data is cached */
-                        if(viewModel.cachedDate != null) {
-                            item {
-                                Column {
-                                    val dateStr = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(viewModel.cachedDate!!)
-
-                                    Spacer(Modifier.height(8.dp))
-
-                                    Text(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .alpha(0.7f),
-                                        text = stringResource(id = R.string.main_last_refresh),
-                                        style = MaterialTheme.typography.caption1,
-                                        textAlign = TextAlign.Center
-                                    )
-
-                                    Text(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .alpha(0.7f),
-                                        text = dateStr,
-                                        style = MaterialTheme.typography.caption3,
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
-                            }
-                        }
-
-                        items(state.data!!.shoppingListItems.size) {
-                            val item = state.data.shoppingListItems[it]
-
-                            if (item is ShoppingListTitleEntry) {
-                                /*  product category titles */
-                                Text(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 16.dp),
-                                    text = if (item.title != null) item.title!! else stringResource(
-                                        id = item.titleId!!
-                                    ),
-                                    style = MaterialTheme.typography.body2,
-                                    textAlign = TextAlign.Center
-                                )
-                            } else if (item is ShoppingListGrocyItemEntry) {
-                                /* actual shopping list items */
-                                ShoppingListEntryCard(item = item, viewModel = viewModel)
-                            }
-                        }
-                    } else if (state is MainViewModel.State.ConnectionIssue) {
-                        item {
-                            Text(
-                                modifier = Modifier.padding(bottom = 8.dp),
-                                text = stringResource(id = R.string.main_prompt_connection_issues),
-                                style = MaterialTheme.typography.body1,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-
-                    item {
-                        /* sign out and licenses buttons */
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Button(
-                                modifier = Modifier.padding(end = 4.dp),
-                                onClick = { showSignOutAlert = true },
-                                colors = ButtonDefaults.secondaryButtonColors()
-                            ) {
-                                Icon(
-                                    Icons.Rounded.Logout,
-                                    contentDescription = stringResource(id = R.string.sign_out)
-                                )
-                            }
-
-                            Chip(
-                                modifier = Modifier.padding(start = 4.dp),
-                                colors = ChipDefaults.gradientBackgroundChipColors(),
-                                label = { Text(stringResource(id = R.string.settings)) },
-                                onClick = { triggerAction(ACTION_SHOW_SETTINGS) }
-                            )
-                        }
-                    }
-                }
-            }
-
-            if(viewModel.cachedDate != null) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    CompactChip(
-                        modifier = Modifier.padding(bottom = 12.dp),
-                        colors = ChipDefaults.secondaryChipColors(),
-                        icon = { Icon(Icons.Rounded.WifiOff, "Offline") },
-                        label = { Text("Offline", Modifier.padding(end = 4.dp)) },
-                        onClick = { }
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ShoppingListEntryCard(item: ShoppingListGrocyItemEntry, viewModel: MainViewModel) {
-    val entry = item.entry
-    val alpha = if (entry.done) 0.5f else 1f
-
-    TitleCard(
-        title = { Text(if(entry.product != null) entry.product!!.name else entry.note) },
-        modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
-            .alpha(alpha),
-        onClick = {
-            viewModel.toggleShoppingListEntryDoneStatus(entry)
-        }
+    WearAppTheme(
+        vm.ambientMode
     ) {
-        if(entry.product != null && entry.note.isNotEmpty()) {
-            Text(
-                entry.note,
-                fontSize = 12.sp,
-                fontFamily = FontFamily.Serif,
-                fontStyle = FontStyle.Italic
-            )
-        }
+        Scaffold(
+            Modifier.background(MaterialTheme.colors.background)
+        ) {
+            fun NavGraphBuilder.defaultListComposable(route: String, comp: @Composable (context: ScaffoldContext<ScalingLazyListState>) -> Unit) {
+                @Suppress("DEPRECATION")
+                scalingLazyColumnComposable(route, scrollStateBuilder = { ScalingLazyListState() }) {
+                    comp(it)
+                }
+            }
 
-        val quantityUnit =
-            if (entry.quantityUnit == null) "" else if (entry.amount == "1") entry.quantityUnit?.name else entry.quantityUnit?.namePlural
-        Text(entry.amount + " " + quantityUnit)
-    }
-}
+            val routes = listOf(
+                Route("home") { HomeRoute(mainVM = vm, sc = it) },
 
-@Composable
-fun AlertSignOut(onClickPrimary: () -> Unit, onClickSecondary: () -> Unit) {
-    Alert(
-        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
-        contentPadding = PaddingValues(start = 10.dp, end = 10.dp, top = 24.dp, bottom = 52.dp),
-        icon = {
-            Icon(
-                Icons.Rounded.Logout,
-                contentDescription = stringResource(id = R.string.sign_out),
-                modifier = Modifier
-                    .size(24.dp)
-                    .wrapContentSize(align = Alignment.Center),
+                Route("add") { AddProductRoute(vm = vm, sc = it) },
+                Route("selectList") { SelectListRoute(mainVM = vm, sc = it) },
+
+                Route("delete/done") { DeleteDoneRoute(vm = vm, sc = it) },
+
+                Route("settings") { SettingsRoute(vm = vm, sc = it) },
+                Route("settings/productGroupsOrder") { SettingsProductGroupsOrderRoute(mainVM = vm, sc = it) },
+                Route("settings/legal") { SettingsLegalRoute(sc = it) },
+
+                Route("alerts/welcome") { AlertWelcomeRoute(vm = vm, sc = it) }
             )
-        },
-        title = {
-            Text(
-                text = stringResource(id = R.string.dialog_confirmation_title),
-                textAlign = TextAlign.Center
-            )
-        },
-        message = {
-            Text(
-                text = stringResource(id = R.string.main_dialog_logout_message),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.body2
-            )
-        },
-    ) {
-        item {
-            Row {
-                Chip(
-                    modifier = Modifier.padding(end = 8.dp),
-                    label = { Text(stringResource(id = R.string.yes)) },
-                    onClick = onClickPrimary,
-                    colors = ChipDefaults.gradientBackgroundChipColors(),
-                )
-                Chip(
-                    modifier = Modifier.padding(start = 8.dp),
-                    label = { Text(stringResource(id = R.string.no)) },
-                    onClick = onClickSecondary,
-                    colors = ChipDefaults.secondaryChipColors(),
-                )
+
+            WearNavScaffold(
+                navController = navController,
+                startDestination = "home"
+            ) {
+                routes.forEach { route ->
+                    defaultListComposable(route.route, route.comp)
+                }
             }
         }
     }

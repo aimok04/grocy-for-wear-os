@@ -18,6 +18,7 @@ class GrocyClient(
     val OBJECTS_PRODUCT_GROUPS = HashMap<String, GrocyProductGroup>()
     val OBJECTS_QUANTITY_UNITS = HashMap<String, GrocyQuantityUnit>()
 
+    val OBJECTS_SHOPPING_LISTS = HashMap<Number, GrocyShoppingList>()
     val OBJECTS_PRODUCTS = HashMap<String, GrocyProduct>()
     val OBJECTS_SHOPPING_LIST_ENTRIES = HashMap<String, GrocyShoppingListEntry>()
 
@@ -27,6 +28,29 @@ class GrocyClient(
     fun fetchCacheDate() : Date? {
         val time = cache.getLong("latestCacheDate", 0L)
         return if(time != 0L) Date(time) else null
+    }
+
+    fun fetchShoppingLists(cached: Boolean): ArrayList<GrocyShoppingList> {
+        val list = ArrayList<GrocyShoppingList>()
+        val json = JSONArray(GrocyRequest(this).get("/api/objects/shopping_lists", cached))
+
+        var i = 0
+        while (!json.isNull(i)) {
+            val obj = json.getJSONObject(i)
+            val id = obj.getInt("id")
+            i++
+
+            if (OBJECTS_SHOPPING_LISTS.containsKey(id)) {
+                OBJECTS_SHOPPING_LISTS[id]!!.parse(obj)
+                list.add(OBJECTS_SHOPPING_LISTS[id]!!)
+                continue
+            }
+
+            OBJECTS_SHOPPING_LISTS[id] = GrocyShoppingList(obj)
+            list.add(OBJECTS_SHOPPING_LISTS[id]!!)
+        }
+
+        return list
     }
 
     fun fetchShoppingListEntries(cached: Boolean): ArrayList<GrocyShoppingListEntry> {
@@ -87,7 +111,7 @@ class GrocyClient(
                 continue
             }
 
-            OBJECTS_PRODUCTS[id] = GrocyProduct(obj)
+            OBJECTS_PRODUCTS[id] = GrocyProduct(this, obj)
             list.add(OBJECTS_PRODUCTS[id]!!)
         }
 

@@ -54,6 +54,10 @@ dependencies {
   /* http */
   implementation "com.squareup.okhttp3:okhttp:4.10.0"
 
+  /* for requestCode issue */
+  implementation 'androidx.activity:activity-ktx:1.7.2'
+  implementation 'androidx.fragment:fragment-ktx:1.5.7'
+
   /* compose */
   implementation libs.androidx.activity.compose
   implementation libs.compose.ui.tooling.preview
@@ -75,6 +79,8 @@ dependencies {
   implementation "com.google.android.horologist:horologist-compose-layout:0.2.7"
 
   implementation 'com.google.android.gms:play-services-wearable:18.0.0'
+  implementation 'androidx.wear:wear-input:1.1.0'
+  implementation 'androidx.wear:wear:1.2.0'
 
   /* debug */
   debugImplementation libs.compose.ui.tooling

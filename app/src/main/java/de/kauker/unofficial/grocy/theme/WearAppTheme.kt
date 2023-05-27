@@ -5,10 +5,11 @@ import androidx.wear.compose.material.MaterialTheme
 
 @Composable
 fun WearAppTheme(
+    ambientMode: Boolean,
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colors = wearColorPalette,
+        colors = if(ambientMode) wearColorPaletteAmbient else wearColorPalette,
         typography = Typography,
         content = content
     )

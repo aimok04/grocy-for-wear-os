@@ -22,18 +22,6 @@
             android:value="false" />
 
         <activity
-            android:name=".activities.SettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".activities.ProductGroupsOrderActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".activities.LegalActivity"
-            android:exported="false" />
-
-        <activity
             android:name=".activities.SetupActivity"
             android:exported="true">
             <intent-filter>

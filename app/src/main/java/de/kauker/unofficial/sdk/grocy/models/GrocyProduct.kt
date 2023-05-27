@@ -1,8 +1,11 @@
 package de.kauker.unofficial.sdk.grocy.models
 
+import de.kauker.unofficial.sdk.grocy.GrocyClient
+import de.kauker.unofficial.sdk.grocy.GrocyRequest
 import org.json.JSONObject
 
 class GrocyProduct(
+    val grocyClient: GrocyClient,
     data: JSONObject
 ) {
 
@@ -50,6 +53,25 @@ class GrocyProduct(
 
     override fun toString(): String {
         return "GrocyProduct(id='$id', name='$name', description='$description', timestamp='$timestamp', productGroup=$productGroup, _productGroupId='$_productGroupId', active=$active, location=$location, _locationId='$_locationId', shoppingLocation=$shoppingLocation, _shoppingLocationId='$_shoppingLocationId', quantityUnitPurchase=$quantityUnitPurchase, _quantityUnitPurchaseId='$_quantityUnitPurchaseId', quantityUnitStock=$quantityUnitStock, _quantityUnitStockId='$_quantityUnitStockId', quantityTranslateFactor='$quantityTranslateFactor')"
+    }
+
+    /* api calls */
+    fun addToShoppingList(shoppingListId: Int, amount: Int): Boolean {
+        val post = JSONObject()
+        post.put("product_id", this.id)
+        post.put("amount", amount)
+        post.put("shopping_list_id", shoppingListId)
+
+        try {
+            return GrocyRequest(grocyClient).post(
+                "/api/objects/shopping_list",
+                post.toString()
+            ).isSuccessful
+        } catch (throwable: Throwable) {
+            throwable.printStackTrace()
+        }
+
+        return false
     }
 
 }

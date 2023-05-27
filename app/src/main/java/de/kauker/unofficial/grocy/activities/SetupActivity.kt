@@ -29,7 +29,7 @@ import com.google.android.gms.wearable.Wearable
 import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
 import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
 import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
-import de.kauker.unofficial.grocy.INSTALL_COMPANION_APP_URL
+import de.kauker.unofficial.grocy.GOOGLE_PLAY_VERSION
 import de.kauker.unofficial.grocy.MainActivity
 import de.kauker.unofficial.grocy.R
 import de.kauker.unofficial.grocy.theme.WearAppTheme
@@ -43,7 +43,9 @@ class SetupActivity : ComponentActivity() {
         val viewModel = SetupViewModel(application)
 
         setContent {
-            WearAppTheme {
+            WearAppTheme(
+                false
+            ) {
                 SetupComp(this, viewModel)
             }
         }
@@ -194,7 +196,8 @@ fun SetupComp(activity: SetupActivity, vm: SetupViewModel) {
                         label = { Text(stringResource(id = R.string.install)) },
                         colors = ChipDefaults.secondaryChipColors(),
                         onClick = {
-                            vm.openUriRemotely(Uri.parse(INSTALL_COMPANION_APP_URL))
+                            val appUrl = if(!GOOGLE_PLAY_VERSION) "https://github.com/aimok04/grocy-for-wear-os/releases/latest" else "https://play.google.com/store/apps/details?id=de.kauker.unofficial.grocy"
+                            vm.openUriRemotely(Uri.parse(appUrl))
                         }
                     )
                 }

@@ -35,6 +35,28 @@ class GrocyRequest(grocyClient: GrocyClient) {
         return content
     }
 
+    fun delete(endpoint: String, body: String): Response {
+        val request = Request.Builder()
+            .url(grocyClient.serverUrl + endpoint)
+            .addHeader("GROCY-API-KEY", grocyClient.apiToken)
+            .addHeader("content-type", "application/json")
+            .delete(body.toRequestBody())
+            .build()
+
+        return grocyClient.okHttpClient.newCall(request).execute()
+    }
+
+    fun post(endpoint: String, post: String): Response {
+        val request = Request.Builder()
+            .url(grocyClient.serverUrl + endpoint)
+            .addHeader("GROCY-API-KEY", grocyClient.apiToken)
+            .addHeader("content-type", "application/json")
+            .post(post.toRequestBody())
+            .build()
+
+        return grocyClient.okHttpClient.newCall(request).execute()
+    }
+
     fun put(endpoint: String, put: String): Response {
         val request = Request.Builder()
             .url(grocyClient.serverUrl + endpoint)

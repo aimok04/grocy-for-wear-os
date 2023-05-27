@@ -5,6 +5,8 @@
     <!-- misc -->
     <string name="install">Installieren</string>
 
+    <string name="add">Hinzufügen</string>
+
     <string name="open">Öffnen</string>
     <string name="close">Schließen</string>
 
@@ -15,33 +17,56 @@
     <string name="sign_out">Abmelden</string>
 
     <string name="reset">Zurücksetzen</string>
+    <string name="delete">Löschen</string>
+
+    <string name="delete_all">Alle löschen</string>
+
+    <string name="done">Erledigt</string>
+    <string name="finish">Fertig</string>
+
+    <string name="reopen">Erneut öffnen</string>
 
     <string name="move_up">Nach oben</string>
     <string name="move_down">Nach unten</string>
 
     <!-- dialogs -->
     <string name="dialog_confirmation_title">Bestätigung</string>
+    <string name="dialog_delete_done_prompt_message">Möchtest du alle als "Erledigt" markierte Einträge löschen?</string>
+    <string name="dialog_logout_message">Möchtest du dich wirklich abmelden?</string>
 
-    <!-- MainActivity -->
+    <!-- Welcome -->
+    <string name="dialog_welcome_title">Moin!</string>
+    <string name="dialog_welcome_google_play_message">Lass doch eine Bewertung da, damit die App in Zukunft noch besser werden kann :)</string>
+    <string name="dialog_welcome_foss_message">Wenn du möchtest, kannst du gerne dem Projekt beitragen, indem du die App zum Beispiel übersetzt oder ein Issue öffnest :)</string>
+
+    <!-- HomeRoute -->
     <string name="main_title">Einkaufsliste</string>
     <string name="main_prompt_connection_issues">Es gibt Probleme mit der Verbindung. Stimmen die Verbindungsdaten?</string>
-
-    <string name="main_dialog_logout_message">Möchtest du dich wirklich abmelden?</string>
 
     <string name="main_list_unsorted">Unsortiert</string>
     <string name="main_list_done">Erledigt</string>
 
+    <string name="main_list_empty_message">Keine Einträge in dieser Liste.</string>
+
     <string name="main_last_refresh">Zuletzt abgerufen</string>
 
-    <!-- SettingsActivity -->
+    <!-- SelectListRoute -->
+    <string name="select_list_route_title">Liste auswählen</string>
+
+    <!-- AddProductRoute -->
+    <string name="add_product_route_product_search_label">Gebe den Produktnamen ein</string>
+    <string name="add_product_route_products_found_title">Gefundene Produkte</string>
+    <string name="add_product_route_no_products_found_label">Keine Produkte gefunden.</string>
+
+    <!-- SettingsRoute -->
     <string name="settings_title">Einstellungen</string>
-    <string name="settings_button_product_groups_order">Produktgruppen-Reihenfolge</string>
+    <string name="settings_button_product_groups_order">Reihenfolge ändern</string>
     <string name="settings_button_legal_stuff">Rechtliches</string>
 
-    <!-- ProductGroupsOrderActivity -->
+    <!-- SettingsProductGroupsOrderRoute -->
     <string name="productgroups_title">Produktgruppen</string>
 
-    <!-- LegalActivity -->
+    <!-- SettingsLegalRoute -->
     <string name="legal_title">Bibliotheken</string>
 
     <!-- SetupActivity -->

@@ -1,8 +1,5 @@
-package de.kauker.unofficial.grocy.activities
+package de.kauker.unofficial.grocy.routes.settings
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,30 +20,23 @@ import androidx.wear.compose.material.dialog.Alert
 import androidx.wear.compose.material.dialog.Dialog
 import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
 import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import com.google.android.horologist.compose.navscaffold.ScaffoldContext
 import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.util.withContext
 import de.kauker.unofficial.grocy.R
-import de.kauker.unofficial.grocy.theme.WearAppTheme
-
-class LegalActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val libs = Libs.Builder().withContext(this).build()
-
-        setContent {
-            WearAppTheme {
-                LibrariesList(libraries = libs.libraries)
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
-fun LibrariesList(libraries: List<Library>) {
+fun SettingsLegalRoute(sc: ScaffoldContext<ScalingLazyListState>) {
+    val context = LocalContext.current
+    var libs by remember { mutableStateOf<Libs?>(null) }
+
+    LaunchedEffect(Unit) {
+        libs = Libs.Builder().withContext(context).build()
+    }
+
     var showDetailsDialog by remember { mutableStateOf(false) }
     var selectedLibrary: Library? by remember { mutableStateOf(null) }
     Dialog(showDialog = showDetailsDialog, onDismissRequest = { showDetailsDialog = false }) {
@@ -53,12 +44,12 @@ fun LibrariesList(libraries: List<Library>) {
     }
 
     val focusRequester = rememberActiveFocusRequester()
-    val scrollableState = rememberScalingLazyListState()
 
     ScalingLazyColumn(
-        modifier = Modifier.focusRequester(focusRequester)
-            .rotaryWithScroll(focusRequester, scrollableState),
-        state = scrollableState
+        modifier = Modifier
+            .focusRequester(focusRequester)
+            .rotaryWithScroll(focusRequester, sc.scrollableState),
+        state = sc.scrollableState
     ) {
         item {
             Text(
@@ -72,34 +63,35 @@ fun LibrariesList(libraries: List<Library>) {
             )
         }
 
-        items(libraries.size) {
-            val library = libraries[it]
+        if(libs != null) {
+            items(libs!!.libraries.size) {
+                val library = libs!!.libraries[it]
 
-            TitleCard(
-                title = { Text(library.name + " @ " + library.artifactVersion) },
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
-                    .background(MaterialTheme.colors.background, RoundedCornerShape(24.dp)),
-                onClick = {
-                    selectedLibrary = library
-                    showDetailsDialog = true
-                },
-                backgroundPainter = painterResource(id = R.drawable.empty_background)
-            ) {
-                val developers = ArrayList<String?>()
-                for (developer in library.developers) developers.add(developer.name)
+                TitleCard(
+                    title = { Text(library.name + " @ " + library.artifactVersion) },
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+                        .background(MaterialTheme.colors.background, RoundedCornerShape(24.dp)),
+                    onClick = {
+                        selectedLibrary = library
+                        showDetailsDialog = true
+                    },
+                    backgroundPainter = painterResource(id = R.drawable.empty_background)
+                ) {
+                    val developers = ArrayList<String?>()
+                    for (developer in library.developers) developers.add(developer.name)
 
-                Text(developers.joinToString(", "))
+                    Text(developers.joinToString(", "))
 
-                Row {
-                    for (license in library.licenses) CompactChip(
-                        label = { Text(license.name) },
-                        onClick = { },
-                        colors = ChipDefaults.gradientBackgroundChipColors()
-                    )
+                    Row {
+                        for (license in library.licenses) CompactChip(
+                            label = { Text(license.name) },
+                            onClick = { },
+                            colors = ChipDefaults.gradientBackgroundChipColors()
+                        )
+                    }
                 }
             }
-
         }
     }
 }

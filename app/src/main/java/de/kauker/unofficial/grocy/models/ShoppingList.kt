@@ -29,6 +29,7 @@ class ShoppingListGrocyItemEntry(
 
     init {
         this.entry = entry
+        if(this.entry.note == "null") this.entry.note = ""
     }
 
 }

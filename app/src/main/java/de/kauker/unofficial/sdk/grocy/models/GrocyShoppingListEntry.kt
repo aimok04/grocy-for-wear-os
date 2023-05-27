@@ -19,7 +19,7 @@ class GrocyShoppingListEntry(
     lateinit var note: String
     lateinit var amount: String
     lateinit var timestamp: String
-    lateinit var shoppingListId: String
+    lateinit var shoppingListId: Number
     var done: Boolean = false
 
     var quantityUnit: GrocyQuantityUnit? = null
@@ -36,12 +36,24 @@ class GrocyShoppingListEntry(
         note = json.getString("note")
         amount = json.getString("amount")
         timestamp = json.getString("row_created_timestamp")
-        shoppingListId = json.getString("shopping_list_id")
+        shoppingListId = json.getInt("shopping_list_id")
         done = json.getString("done").equals("1")
         _quantityUnitId = json.getString("qu_id")
     }
 
     /* api calls */
+    fun delete(): Boolean {
+        try {
+            return GrocyRequest(grocyClient).delete(
+                "/api/objects/shopping_list/${id}",
+                "{}"
+            ).isSuccessful
+        } catch (throwable: Throwable) {
+            throwable.printStackTrace()
+        }
+        return false
+    }
+
     private fun edit(post: JSONObject): Boolean {
         try {
             return GrocyRequest(grocyClient).put(

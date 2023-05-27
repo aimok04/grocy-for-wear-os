@@ -5,6 +5,8 @@
     <!-- misc -->
     <string name="install">Install</string>
 
+    <string name="add">Add</string>
+
     <string name="open">Open</string>
     <string name="close">Close</string>
 
@@ -15,33 +17,56 @@
     <string name="sign_out">Sign out</string>
 
     <string name="reset">Reset</string>
+    <string name="delete">Delete</string>
+
+    <string name="delete_all">Delete all</string>
+
+    <string name="done">Done</string>
+    <string name="finish">Done</string>
+
+    <string name="reopen">Reopen</string>
 
     <string name="move_up">Move up</string>
     <string name="move_down">Move down</string>
 
     <!-- dialogs -->
     <string name="dialog_confirmation_title">Confirmation</string>
+    <string name="dialog_delete_done_prompt_message">Do you really want to delete all items marked as "Done"?</string>
+    <string name="dialog_logout_message">Do you really want to sign out?</string>
 
-    <!-- MainActivity -->
+    <!-- Welcome -->
+    <string name="dialog_welcome_title">Hello there!</string>
+    <string name="dialog_welcome_google_play_message">Feel free to review this app to make it even better in the future :)</string>
+    <string name="dialog_welcome_foss_message">Feel free to contribute to this project, for example by translating or by opening an issue :)</string>
+
+    <!-- HomeRoute -->
     <string name="main_title">Shopping list</string>
     <string name="main_prompt_connection_issues">Could not connect to server. Are your credentials valid?</string>
-
-    <string name="main_dialog_logout_message">Do you really want to sign out?</string>
 
     <string name="main_list_unsorted">Unsorted</string>
     <string name="main_list_done">Done</string>
 
+    <string name="main_list_empty_message">There are no entries on this list.</string>
+
     <string name="main_last_refresh">Last refresh</string>
 
-    <!-- SettingsActivity -->
+    <!-- SelectListRoute -->
+    <string name="select_list_route_title">Select list</string>
+
+    <!-- AddProductRoute -->
+    <string name="add_product_route_product_search_label">Enter product name</string>
+    <string name="add_product_route_products_found_title">Found products</string>
+    <string name="add_product_route_no_products_found_label">No products found.</string>
+
+    <!-- SettingsRoute -->
     <string name="settings_title">Settings</string>
-    <string name="settings_button_product_groups_order">Product groups order</string>
+    <string name="settings_button_product_groups_order">Change order</string>
     <string name="settings_button_legal_stuff">Legal stuff</string>
 
-    <!-- ProductGroupsOrderActivity -->
+    <!-- SettingsProductGroupsOrderRoute -->
     <string name="productgroups_title">Product groups</string>
 
-    <!-- LegalActivity -->
+    <!-- SettingsLegalRoute -->
     <string name="legal_title">Libraries</string>
 
     <!-- SetupActivity -->
