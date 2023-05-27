@@ -31,7 +31,7 @@
 
     <!-- dialogs -->
     <string name="dialog_confirmation_title">Bestätigung</string>
-    <string name="dialog_delete_done_prompt_message">Möchtest du alle als "Erledigt" markierte Einträge löschen?</string>
+    <string name="dialog_delete_done_prompt_message">Möchtest du alle als \"Erledigt\" markierte Einträge löschen?</string>
     <string name="dialog_logout_message">Möchtest du dich wirklich abmelden?</string>
 
     <!-- Welcome -->

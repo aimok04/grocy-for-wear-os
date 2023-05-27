@@ -31,7 +31,7 @@
 
     <!-- dialogs -->
     <string name="dialog_confirmation_title">Confirmation</string>
-    <string name="dialog_delete_done_prompt_message">Do you really want to delete all items marked as "Done"?</string>
+    <string name="dialog_delete_done_prompt_message">Do you really want to delete all items marked as \"Done\"?</string>
     <string name="dialog_logout_message">Do you really want to sign out?</string>
 
     <!-- Welcome -->
