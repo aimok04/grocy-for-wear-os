@@ -7,9 +7,14 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +51,11 @@ class SetupActivity : ComponentActivity() {
             WearAppTheme(
                 false
             ) {
-                SetupComp(this, viewModel)
+                Box(
+                    Modifier.background(MaterialTheme.colors.background)
+                ) {
+                    SetupComp(this@SetupActivity, viewModel)
+                }
             }
         }
     }
@@ -103,11 +112,8 @@ fun SetupConfirmationComp(activity: SetupActivity, apiUrl: String, apiToken: Str
 
         item {
             Row {
-                /* save credentials button */
-                Chip(
-                    modifier = Modifier.padding(end = 4.dp),
-                    label = { Text(stringResource(id = R.string.yes)) },
-                    colors = ChipDefaults.gradientBackgroundChipColors(),
+                Button(
+                    modifier = Modifier.padding(end = 8.dp),
                     onClick = {
                         val sp = activity.getSharedPreferences(
                             "credentials",
@@ -118,15 +124,21 @@ fun SetupConfirmationComp(activity: SetupActivity, apiUrl: String, apiToken: Str
 
                         activity.startActivity(Intent(activity, MainActivity().javaClass))
                         activity.finish()
-                    }
-                )
-                /* reject credentials button */
-                Chip(
-                    modifier = Modifier.padding(start = 4.dp),
-                    label = { Text(stringResource(id = R.string.no)) },
-                    colors = ChipDefaults.secondaryChipColors(),
-                    onClick = { activity.finish() }
-                )
+                    },
+                    colors = ButtonDefaults.primaryButtonColors()
+                ) {
+                    Icon(Icons.Rounded.Check, stringResource(id = R.string.yes))
+                }
+
+                Button(
+                    modifier = Modifier.padding(end = 8.dp),
+                    onClick = {
+                        activity.finish()
+                    },
+                    colors = ButtonDefaults.secondaryButtonColors()
+                ) {
+                    Icon(Icons.Rounded.Close, stringResource(id = R.string.no))
+                }
             }
         }
     }
@@ -186,7 +198,7 @@ fun SetupComp(activity: SetupActivity, vm: SetupViewModel) {
                     Chip(
                         modifier = Modifier.padding(end = 4.dp),
                         label = { Text(stringResource(id = R.string.open)) },
-                        colors = ChipDefaults.gradientBackgroundChipColors(),
+                        colors = ChipDefaults.primaryChipColors(),
                         onClick = {
                             vm.openUriRemotely(Uri.parse("gfwo://open"))
                         }
