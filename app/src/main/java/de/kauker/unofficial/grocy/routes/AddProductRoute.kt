@@ -5,7 +5,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Done
-import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.*
 import androidx.wear.compose.material.dialog.Confirmation
 import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
-import com.google.android.horologist.compose.layout.fillMaxRectangle
 import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
 import com.google.android.horologist.compose.navscaffold.ScaffoldContext
 import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
@@ -32,7 +30,6 @@ import de.kauker.unofficial.grocy.views.TextInput
 import de.kauker.unofficial.sdk.grocy.models.GrocyProduct
 import kotlin.math.roundToInt
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -44,7 +41,6 @@ fun AddProductRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>
 
     val coroutineScope = rememberCoroutineScope()
 
-    var showInputDialog by remember { mutableStateOf(true) }
     var showDoneDialog by remember { mutableStateOf(false) }
 
     if(showDoneDialog) {
@@ -62,31 +58,12 @@ fun AddProductRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>
     /* first step: type name */
     var text by remember { mutableStateOf<CharSequence>("") }
 
-    if(showInputDialog) {
+    if(text.isEmpty()) {
         TextInput(
             label = stringResource(R.string.add_product_route_product_search_label),
-            onTextReceived = { text = it }
+            onTextReceived = { text = it },
+            onDismiss = { vm.rootNavController?.popBackStack() }
         )
-    }
-
-    if(text.isEmpty()) {
-        Box(
-            Modifier.fillMaxRectangle(),
-            contentAlignment = Alignment.Center
-        ) {
-            CompactChip(
-                onClick = {
-                    showInputDialog = false
-
-                    coroutineScope.launch {
-                        delay(50)
-                        showInputDialog = true
-                    }
-                },
-                icon = { Icon(Icons.Rounded.Refresh, stringResource(id = R.string.reopen)) },
-                label = { Text(stringResource(id = R.string.reopen)) }
-            )
-        }
 
         return
     }

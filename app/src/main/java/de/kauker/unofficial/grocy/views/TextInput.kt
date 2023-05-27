@@ -12,9 +12,15 @@ import androidx.wear.input.RemoteInputIntentHelper
 @Composable
 fun TextInput(
     label: String,
-    onTextReceived: (data: CharSequence) -> Unit
+    onTextReceived: (data: CharSequence) -> Unit,
+    onDismiss: () -> Unit
 ) {
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if(it.resultCode == 0) {
+            onDismiss()
+            return@rememberLauncherForActivityResult
+        }
+
         it.data?.let { data ->
             val results: Bundle = RemoteInput.getResultsFromIntent(data)!!
             onTextReceived(results.getCharSequence("data")!!)
