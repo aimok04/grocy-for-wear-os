@@ -31,8 +31,6 @@ class GrocyProduct(
     var quantityUnitStock: GrocyQuantityUnit? = null
     lateinit var _quantityUnitStockId: String
 
-    var quantityTranslateFactor: String? = null
-
     init {
         parse(data)
     }
@@ -47,12 +45,11 @@ class GrocyProduct(
         _shoppingLocationId = json.getString("shopping_location_id")
         _quantityUnitPurchaseId = json.getString("qu_id_purchase")
         _quantityUnitStockId = json.getString("qu_id_stock")
-        quantityTranslateFactor = json.getString("qu_factor_purchase_to_stock")
         timestamp = json.getString("row_created_timestamp")
     }
 
     override fun toString(): String {
-        return "GrocyProduct(id='$id', name='$name', description='$description', timestamp='$timestamp', productGroup=$productGroup, _productGroupId='$_productGroupId', active=$active, location=$location, _locationId='$_locationId', shoppingLocation=$shoppingLocation, _shoppingLocationId='$_shoppingLocationId', quantityUnitPurchase=$quantityUnitPurchase, _quantityUnitPurchaseId='$_quantityUnitPurchaseId', quantityUnitStock=$quantityUnitStock, _quantityUnitStockId='$_quantityUnitStockId', quantityTranslateFactor='$quantityTranslateFactor')"
+        return "GrocyProduct(id='$id', name='$name', description='$description', timestamp='$timestamp', productGroup=$productGroup, _productGroupId='$_productGroupId', active=$active, location=$location, _locationId='$_locationId', shoppingLocation=$shoppingLocation, _shoppingLocationId='$_shoppingLocationId', quantityUnitPurchase=$quantityUnitPurchase, _quantityUnitPurchaseId='$_quantityUnitPurchaseId', quantityUnitStock=$quantityUnitStock, _quantityUnitStockId='$_quantityUnitStockId')"
     }
 
     /* api calls */
