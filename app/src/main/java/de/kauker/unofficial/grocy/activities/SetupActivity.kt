@@ -49,7 +49,8 @@ class SetupActivity : ComponentActivity() {
 
         setContent {
             WearAppTheme(
-                false
+                ambientMode = false,
+                amoledMode = true
             ) {
                 Box(
                     Modifier.background(MaterialTheme.colors.background)

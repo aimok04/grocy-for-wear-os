@@ -36,7 +36,7 @@ class MainViewModel constructor(apiUrl: String, apiToken: String, application: A
     var grocyClient = GrocyClient(application, apiUrl, apiToken)
 
     init {
-        amoledMode = settingsSp.getBoolean("amoledMode", false)
+        amoledMode = settingsSp.getBoolean("amoledMode", true)
     }
 
 }
