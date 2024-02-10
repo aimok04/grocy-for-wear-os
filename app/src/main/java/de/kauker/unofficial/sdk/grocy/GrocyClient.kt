@@ -1,6 +1,7 @@
 package de.kauker.unofficial.sdk.grocy
 
 import android.content.Context
+import de.kauker.unofficial.grocy.utils.jsonInstance
 import de.kauker.unofficial.sdk.grocy.models.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -40,13 +41,7 @@ class GrocyClient(
             val id = obj.getInt("id")
             i++
 
-            if (OBJECTS_SHOPPING_LISTS.containsKey(id)) {
-                OBJECTS_SHOPPING_LISTS[id]!!.parse(obj)
-                list.add(OBJECTS_SHOPPING_LISTS[id]!!)
-                continue
-            }
-
-            OBJECTS_SHOPPING_LISTS[id] = GrocyShoppingList(obj)
+            OBJECTS_SHOPPING_LISTS[id] = jsonInstance.decodeFromString<GrocyShoppingList>(obj.toString())
             list.add(OBJECTS_SHOPPING_LISTS[id]!!)
         }
 
@@ -63,13 +58,9 @@ class GrocyClient(
             val id = obj.getString("id")
             i++
 
-            if (OBJECTS_SHOPPING_LIST_ENTRIES.containsKey(id)) {
-                OBJECTS_SHOPPING_LIST_ENTRIES[id]!!.parse(obj)
-                list.add(OBJECTS_SHOPPING_LIST_ENTRIES[id]!!)
-                continue
-            }
+            OBJECTS_SHOPPING_LIST_ENTRIES[id] = jsonInstance.decodeFromString<GrocyShoppingListEntry>(obj.toString())
+            OBJECTS_SHOPPING_LIST_ENTRIES[id]?.grocyClient = this
 
-            OBJECTS_SHOPPING_LIST_ENTRIES[id] = GrocyShoppingListEntry(this, obj)
             list.add(OBJECTS_SHOPPING_LIST_ENTRIES[id]!!)
         }
 
@@ -105,50 +96,46 @@ class GrocyClient(
             val id = obj.getString("id")
             i++
 
-            if (OBJECTS_PRODUCTS.containsKey(id)) {
-                OBJECTS_PRODUCTS[id]!!.parse(obj)
-                list.add(OBJECTS_PRODUCTS[id]!!)
-                continue
-            }
+            OBJECTS_PRODUCTS[id] = jsonInstance.decodeFromString<GrocyProduct>(obj.toString())
+            OBJECTS_PRODUCTS[id]?.grocyClient = this
 
-            OBJECTS_PRODUCTS[id] = GrocyProduct(this, obj)
             list.add(OBJECTS_PRODUCTS[id]!!)
         }
 
         for (product in list) {
-            if (OBJECTS_LOCATIONS.containsKey(product._locationId)
-                && OBJECTS_LOCATIONS.containsKey(product._shoppingLocationId)
+            if (OBJECTS_LOCATIONS.containsKey(product.locationId)
+                && OBJECTS_LOCATIONS.containsKey(product.shoppingLocationId)
             ) continue
             fetchLocations(cached)
             break
         }
 
         for (product in list) {
-            if (OBJECTS_PRODUCT_GROUPS.containsKey(product._productGroupId)) continue
+            if (OBJECTS_PRODUCT_GROUPS.containsKey(product.productGroupId)) continue
             fetchProductGroups(cached)
             break
         }
 
         for (product in list) {
-            if (OBJECTS_QUANTITY_UNITS.containsKey(product._quantityUnitStockId)
-                && OBJECTS_QUANTITY_UNITS.containsKey(product._quantityUnitPurchaseId)
+            if (OBJECTS_QUANTITY_UNITS.containsKey(product.quantityUnitStockId)
+                && OBJECTS_QUANTITY_UNITS.containsKey(product.quantityUnitPurchaseId)
             ) continue
             fetchQuantityUnits(cached)
             break
         }
 
         for (product in list) {
-            if (OBJECTS_PRODUCT_GROUPS.containsKey(product._productGroupId))
-                product.productGroup = OBJECTS_PRODUCT_GROUPS[product._productGroupId]!!
-            if (OBJECTS_LOCATIONS.containsKey(product._locationId))
-                product.location = OBJECTS_LOCATIONS[product._locationId]!!
-            if (OBJECTS_LOCATIONS.containsKey(product._shoppingLocationId))
-                product.shoppingLocation = OBJECTS_LOCATIONS[product._shoppingLocationId]!!
-            if (OBJECTS_QUANTITY_UNITS.containsKey(product._quantityUnitPurchaseId))
+            if (OBJECTS_PRODUCT_GROUPS.containsKey(product.productGroupId))
+                product.productGroup = OBJECTS_PRODUCT_GROUPS[product.productGroupId]!!
+            if (OBJECTS_LOCATIONS.containsKey(product.locationId))
+                product.location = OBJECTS_LOCATIONS[product.locationId]!!
+            if (OBJECTS_LOCATIONS.containsKey(product.shoppingLocationId))
+                product.shoppingLocation = OBJECTS_LOCATIONS[product.shoppingLocationId]!!
+            if (OBJECTS_QUANTITY_UNITS.containsKey(product.quantityUnitPurchaseId))
                 product.quantityUnitPurchase =
-                    OBJECTS_QUANTITY_UNITS[product._quantityUnitPurchaseId]!!
-            if (OBJECTS_QUANTITY_UNITS.containsKey(product._quantityUnitStockId))
-                product.quantityUnitStock = OBJECTS_QUANTITY_UNITS[product._quantityUnitStockId]!!
+                    OBJECTS_QUANTITY_UNITS[product.quantityUnitPurchaseId]!!
+            if (OBJECTS_QUANTITY_UNITS.containsKey(product.quantityUnitStockId))
+                product.quantityUnitStock = OBJECTS_QUANTITY_UNITS[product.quantityUnitStockId]!!
         }
 
         return list
@@ -164,13 +151,7 @@ class GrocyClient(
             val id = obj.getString("id")
             i++
 
-            if (OBJECTS_QUANTITY_UNITS.containsKey(id)) {
-                OBJECTS_QUANTITY_UNITS[id]!!.parse(obj)
-                list.add(OBJECTS_QUANTITY_UNITS[id]!!)
-                continue
-            }
-
-            OBJECTS_QUANTITY_UNITS[id] = GrocyQuantityUnit(obj)
+            OBJECTS_QUANTITY_UNITS[id] = jsonInstance.decodeFromString<GrocyQuantityUnit>(obj.toString())
             list.add(OBJECTS_QUANTITY_UNITS[id]!!)
         }
 
@@ -187,13 +168,7 @@ class GrocyClient(
             val id = obj.getString("id")
             i++
 
-            if (OBJECTS_PRODUCT_GROUPS.containsKey(id)) {
-                OBJECTS_PRODUCT_GROUPS[id]!!.parse(obj)
-                list.add(OBJECTS_PRODUCT_GROUPS[id]!!)
-                continue
-            }
-
-            OBJECTS_PRODUCT_GROUPS[id] = GrocyProductGroup(obj)
+            OBJECTS_PRODUCT_GROUPS[id] = jsonInstance.decodeFromString<GrocyProductGroup>(obj.toString())
             list.add(OBJECTS_PRODUCT_GROUPS[id]!!)
         }
 
@@ -210,13 +185,7 @@ class GrocyClient(
             val id = obj.getString("id")
             i++
 
-            if (OBJECTS_LOCATIONS.containsKey(id)) {
-                OBJECTS_LOCATIONS[id]!!.parse(obj)
-                list.add(OBJECTS_LOCATIONS[id]!!)
-                continue
-            }
-
-            OBJECTS_LOCATIONS[id] = GrocyLocation(obj)
+            OBJECTS_LOCATIONS[id] = jsonInstance.decodeFromString<GrocyLocation>(obj.toString())
             list.add(OBJECTS_LOCATIONS[id]!!)
         }
 

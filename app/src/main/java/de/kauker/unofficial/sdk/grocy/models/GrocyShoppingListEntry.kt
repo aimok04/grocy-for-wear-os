@@ -1,73 +1,50 @@
 package de.kauker.unofficial.sdk.grocy.models
 
+import de.kauker.unofficial.grocy.utils.JsonAsStringSerializer
 import de.kauker.unofficial.sdk.grocy.GrocyClient
-import de.kauker.unofficial.sdk.grocy.GrocyRequest
-import org.json.JSONObject
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
+@Serializable
 class GrocyShoppingListEntry(
-    grocyClient: GrocyClient,
-    data: JSONObject
+    @Serializable(with = JsonAsStringSerializer::class)
+    var id: String,
+
+    @Serializable(with = JsonAsStringSerializer::class)
+    @SerialName("product_id")
+    var _productId: String,
+
+    @Serializable(with = JsonAsStringSerializer::class)
+    var note: String?,
+
+    @Serializable(with = JsonAsStringSerializer::class)
+    var amount: String?,
+
+    @Serializable(with = JsonAsStringSerializer::class)
+    @SerialName("row_created_timestamp")
+    var timestamp: String?,
+
+    @Serializable(with = JsonAsStringSerializer::class)
+    @SerialName("shopping_list_id")
+    var shoppingListId: String,
+
+    @Serializable(with = JsonAsStringSerializer::class)
+    @SerialName("done")
+    var _done: String?,
+
+    @Serializable(with = JsonAsStringSerializer::class)
+    @SerialName("qu_id")
+    var _quantityUnitId: String?
 ) {
 
-    val grocyClient: GrocyClient
+    @Transient var grocyClient: GrocyClient? = null
 
-    lateinit var id: String
+    @Transient var product: GrocyProduct? = null
+    @Transient var quantityUnit: GrocyQuantityUnit? = null
 
-    var product: GrocyProduct? = null
-    lateinit var _productId: String
-
-    lateinit var note: String
-    lateinit var amount: String
-    lateinit var timestamp: String
-    lateinit var shoppingListId: Number
-    var done: Boolean = false
-
-    var quantityUnit: GrocyQuantityUnit? = null
-    lateinit var _quantityUnitId: String
-
-    init {
-        this.grocyClient = grocyClient
-        parse(data)
-    }
-
-    fun parse(json: JSONObject) {
-        id = json.getString("id")
-        _productId = json.getString("product_id")
-        note = json.getString("note")
-        amount = json.getString("amount")
-        timestamp = json.getString("row_created_timestamp")
-        shoppingListId = json.getInt("shopping_list_id")
-        done = json.getString("done").equals("1")
-        _quantityUnitId = json.getString("qu_id")
-    }
-
-    /* api calls */
-    fun delete(): Boolean {
-        try {
-            return GrocyRequest(grocyClient).delete(
-                "/api/objects/shopping_list/${id}",
-                "{}"
-            ).isSuccessful
-        } catch (throwable: Throwable) {
-            throwable.printStackTrace()
-        }
-        return false
-    }
-
-    private fun edit(post: JSONObject): Boolean {
-        try {
-            return GrocyRequest(grocyClient).put(
-                "/api/objects/shopping_list/${id}",
-                post.toString()
-            ).isSuccessful
-        } catch (throwable: Throwable) {
-            throwable.printStackTrace()
-        }
-        return false
-    }
-
-    fun setDone(done: Boolean): Boolean {
-        return edit(JSONObject().put("done", if (done) "1" else "0"))
-    }
+    var done: Boolean
+        get() { return _done == "1" }
+        set(value) { this._done = if(value) "1" else "0" }
 
 }

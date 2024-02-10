@@ -1,29 +1,21 @@
 package de.kauker.unofficial.sdk.grocy.models
 
-import org.json.JSONObject
+import de.kauker.unofficial.grocy.utils.JsonAsStringSerializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-
+@Serializable
 class GrocyProductGroup(
-    data: JSONObject
-) {
+    @Serializable(with = JsonAsStringSerializer::class)
+    var id: String,
 
-    lateinit var id: String
-    lateinit var name: String
-    lateinit var description: String
-    lateinit var timestamp: String
+    @Serializable(with = JsonAsStringSerializer::class)
+    var name: String?,
 
-    init {
-        parse(data)
-    }
+    @Serializable(with = JsonAsStringSerializer::class)
+    var description: String?,
 
-    fun parse(json: JSONObject) {
-        id = json.getString("id")
-        name = json.getString("name")
-        description = json.getString("description")
-        timestamp = json.getString("row_created_timestamp")
-    }
-
-    override fun toString(): String {
-        return "GrocyProductGroup(id='$id', name='$name', description='$description', timestamp='$timestamp')"
-    }
-}
+    @Serializable(with = JsonAsStringSerializer::class)
+    @SerialName("row_created_timestamp")
+    var timestamp: String?
+)

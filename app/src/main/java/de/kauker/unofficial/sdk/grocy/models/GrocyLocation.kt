@@ -1,20 +1,19 @@
 package de.kauker.unofficial.sdk.grocy.models
 
-import org.json.JSONObject
+import de.kauker.unofficial.grocy.utils.JsonAsStringSerializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 class GrocyLocation(
-    data: JSONObject
-) {
+    @Serializable(with = JsonAsStringSerializer::class)
+    var id: String,
 
-    lateinit var id: String
-    lateinit var name: String
-    lateinit var description: String
-    lateinit var timestamp: String
-    var isFreezer: Boolean = false
+    @Serializable(with = JsonAsStringSerializer::class)
+    var name: String?,
 
-    init {
-        parse(data)
-    }
+    @Serializable(with = JsonAsStringSerializer::class)
+    var description: String?,
 
     fun parse(json: JSONObject) {
         id = json.getString("id")
