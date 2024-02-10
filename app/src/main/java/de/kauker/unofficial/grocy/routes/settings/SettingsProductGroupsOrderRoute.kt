@@ -21,9 +21,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.wear.compose.material.*
-import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
-import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.ScalingLazyListState
+import androidx.wear.compose.foundation.rememberActiveFocusRequester
+import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.Card
+import androidx.wear.compose.material.CircularProgressIndicator
+import androidx.wear.compose.material.CompactButton
+import androidx.wear.compose.material.CompactChip
+import androidx.wear.compose.material.Icon
+import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Text
+import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.navscaffold.ScaffoldContext
 import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import de.kauker.unofficial.grocy.MainViewModel
@@ -34,7 +44,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 
-@OptIn(ExperimentalHorologistComposeLayoutApi::class)
+@OptIn(ExperimentalHorologistApi::class, ExperimentalWearFoundationApi::class)
 @Composable
 fun SettingsProductGroupsOrderRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) {
     val vm = mainVM.vmSettingsProductGroupsOrderRoute
@@ -88,7 +98,7 @@ fun SettingsProductGroupsOrderRoute(mainVM: MainViewModel, sc: ScaffoldContext<S
                         ) {
                             Text(
                                 modifier = Modifier.weight(1f, true),
-                                text = group.name
+                                text = group.name?: ""
                             )
 
                             Row(

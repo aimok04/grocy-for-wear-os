@@ -24,9 +24,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.wear.compose.material.*
-import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
-import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.ScalingLazyListState
+import androidx.wear.compose.foundation.rememberActiveFocusRequester
+import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.CardDefaults
+import androidx.wear.compose.material.CircularProgressIndicator
+import androidx.wear.compose.material.CompactButton
+import androidx.wear.compose.material.CompactChip
+import androidx.wear.compose.material.Icon
+import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Text
+import androidx.wear.compose.material.TitleCard
+import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.navscaffold.ScaffoldContext
 import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import de.kauker.unofficial.grocy.MainViewModel
@@ -37,6 +48,8 @@ import de.kauker.unofficial.grocy.models.ShoppingListTitleEntry
 import de.kauker.unofficial.sdk.grocy.models.GrocyProductGroup
 import de.kauker.unofficial.sdk.grocy.models.GrocyShoppingList
 import de.kauker.unofficial.sdk.grocy.models.GrocyShoppingListEntry
+import de.kauker.unofficial.sdk.grocy.transactions.sub.delete
+import de.kauker.unofficial.sdk.grocy.transactions.sub.done
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +58,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 
-@OptIn(ExperimentalHorologistComposeLayoutApi::class)
+@OptIn(ExperimentalWearFoundationApi::class, ExperimentalHorologistApi::class)
 @Composable
 fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) {
     val vm = mainVM.vmHomeRoute
@@ -247,7 +260,7 @@ fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
                 .padding(1.dp)
         ) {
             TitleCard(
-                title = { Text(if(entry.product != null) entry.product!!.name else entry.note) },
+                title = { Text(entry.product?.name?: entry.note?: "Unknown item") },
                 backgroundPainter =
                     if(vm.vm.ambientMode) CardDefaults.cardBackgroundPainter(Color.Black, Color.Black) else CardDefaults.cardBackgroundPainter(),
                 modifier = Modifier
@@ -256,9 +269,9 @@ fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
                     vm.toggleShoppingListEntryDoneStatus(entry)
                 }
             ) {
-                if(entry.product != null && entry.note.isNotEmpty()) {
+                if(entry.product != null && entry.note?.isNotEmpty() == true) {
                     Text(
-                        entry.note,
+                        entry.note?: "",
                         fontSize = 12.sp,
                         fontFamily = FontFamily.Serif,
                         fontStyle = FontStyle.Italic
@@ -273,12 +286,10 @@ fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
     }
 }
 
-class HomeViewModel constructor(
+class HomeViewModel(
     val vm: MainViewModel,
     application: Application
-) : AndroidViewModel(
-    application
-) {
+) : AndroidViewModel(application) {
 
     var loaded by mutableStateOf(false)
     var connectionIssues by mutableStateOf(false)
@@ -396,7 +407,7 @@ class HomeViewModel constructor(
         }
 
         for (group in groupOrder) {
-            mShoppingListItems.add(ShoppingListTitleEntry(title = group.name))
+            mShoppingListItems.add(ShoppingListTitleEntry(title = group.name?: ""))
             for (entry in sectionsMap[group]!!) mShoppingListItems.add(
                 ShoppingListGrocyItemEntry(
                     entry
@@ -423,13 +434,8 @@ class HomeViewModel constructor(
     fun toggleShoppingListEntryDoneStatus(entry: GrocyShoppingListEntry) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val prevStatus = entry.done
-                entry.done = !prevStatus
+                entry.done(!entry.done)
                 reloadUi()
-
-                if (entry.setDone(!prevStatus)) return@withContext
-
-                entry.done = prevStatus
             }
         }
     }
@@ -439,7 +445,7 @@ class HomeViewModel constructor(
             if(it !is ShoppingListGrocyItemEntry) return@forEach
             if(!it.entry.done) return@forEach
 
-            if(!it.entry.delete()) return false
+            it.entry.delete()
         }
 
         return true

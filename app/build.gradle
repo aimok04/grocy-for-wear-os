@@ -2,10 +2,13 @@ plugins {
   id 'com.android.application'
   id 'org.jetbrains.kotlin.android'
   id 'com.mikepenz.aboutlibraries.plugin'
+  id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 android {
-  compileSdk 33
+  namespace "de.kauker.unofficial.grocy"
+
+  compileSdk 34
 
   defaultConfig {
     applicationId "de.kauker.unofficial.grocy"
@@ -49,14 +52,14 @@ android {
 
 dependencies {
   /* legal stuff */
-  implementation "com.mikepenz:aboutlibraries-core:10.5.1"
+  implementation libs.aboutlibraries.core
 
   /* http */
-  implementation "com.squareup.okhttp3:okhttp:4.10.0"
+  implementation libs.okhttp
 
   /* for requestCode issue */
-  implementation 'androidx.activity:activity-ktx:1.7.2'
-  implementation 'androidx.fragment:fragment-ktx:1.5.7'
+  implementation libs.androidx.activity.ktx
+  implementation libs.androidx.fragment.ktx
 
   /* compose */
   implementation libs.androidx.activity.compose
@@ -72,17 +75,19 @@ dependencies {
 
   /* foundation */
   implementation libs.wear.compose.foundation
-  implementation "androidx.compose.ui:ui:$compose_version"
-  implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-  implementation 'androidx.wear:wear-remote-interactions:1.0.0'
+  implementation libs.androidx.ui
+  implementation libs.androidx.lifecycle.runtime.ktx
+  implementation libs.androidx.wear.remote.interactions
 
-  implementation "com.google.android.horologist:horologist-compose-layout:0.2.7"
+  implementation libs.horologist.compose.layout
 
-  implementation 'com.google.android.gms:play-services-wearable:18.0.0'
-  implementation 'androidx.wear:wear-input:1.1.0'
-  implementation 'androidx.wear:wear:1.2.0'
+  implementation libs.play.services.wearable
+  implementation libs.androidx.wear.input
+  implementation libs.androidx.wear
+
+  implementation libs.kotlinx.serialization.json
 
   /* debug */
   debugImplementation libs.compose.ui.tooling
-  debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+  debugImplementation libs.androidx.ui.test.manifest
 }

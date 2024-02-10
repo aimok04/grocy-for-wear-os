@@ -1,6 +1,10 @@
 package de.kauker.unofficial.grocy.routes
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ListAlt
 import androidx.compose.runtime.Composable
@@ -9,7 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.material.*
+import androidx.wear.compose.foundation.lazy.ScalingLazyListState
+import androidx.wear.compose.material.Icon
+import androidx.wear.compose.material.RadioButton
+import androidx.wear.compose.material.Text
+import androidx.wear.compose.material.ToggleChip
 import androidx.wear.compose.material.dialog.Alert
 import com.google.android.horologist.compose.navscaffold.ScaffoldContext
 import de.kauker.unofficial.grocy.MainViewModel
@@ -51,7 +59,7 @@ fun SelectListRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListSt
                     vm.selectedShoppingList = list
                     vm.vm.rootNavController?.popBackStack()
                 },
-                label = { Text(list.name) },
+                label = { Text(list.name?: "Unnamed") },
                 toggleControl = {
                     RadioButton(
                         selected = list == vm.selectedShoppingList

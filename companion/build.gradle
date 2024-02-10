@@ -6,12 +6,12 @@ plugins {
 
 android {
   namespace 'de.kauker.unofficial.grocy'
-  compileSdk 33
+  compileSdk 34
 
   defaultConfig {
     applicationId "de.kauker.unofficial.grocy"
     minSdk 24
-    targetSdk 33
+    targetSdk 34
     versionCode 15
     versionName "1.7m"
 
@@ -47,12 +47,12 @@ android {
 
 dependencies {
   /* legal stuff */
-  implementation "com.mikepenz:aboutlibraries-core:10.5.1"
-  implementation "com.mikepenz:aboutlibraries-compose:10.5.1"
+  implementation libs.aboutlibraries.core
+  implementation libs.aboutlibraries.compose
 
   /* accompanist */
-  implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
-  implementation "com.google.accompanist:accompanist-flowlayout:0.28.0"
+  implementation libs.accompanist.systemuicontroller
+  implementation libs.accompanist.flowlayout
 
   /* compose */
   implementation libs.compose.material3
@@ -62,21 +62,21 @@ dependencies {
   implementation libs.compose.material.icons.core
   implementation libs.compose.material.icons.extended
 
-  implementation 'androidx.activity:activity-compose:1.7.2'
+  implementation libs.androidx.activity.compose
 
-  implementation "androidx.compose.ui:ui:$compose_version"
-  implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+  implementation libs.androidx.ui
+  implementation libs.compose.ui.tooling.preview
 
   /* play services */
-  implementation 'com.google.android.gms:play-services-wearable:18.0.0'
-  implementation 'androidx.wear:wear-remote-interactions:1.0.0'
-  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4'
+  implementation libs.play.services.wearable
+  implementation libs.androidx.wear.remote.interactions
+  implementation libs.kotlinx.coroutines.play.services
 
   /* kotlin */
-  implementation 'androidx.core:core-ktx:1.10.1'
+  implementation libs.androidx.core.ktx
 
   /* other */
-  implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-  debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
-  debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+  implementation libs.androidx.lifecycle.runtime.ktx
+  debugImplementation libs.compose.ui.tooling
+  debugImplementation libs.androidx.ui.test.manifest
 }

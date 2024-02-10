@@ -1,6 +1,12 @@
 package de.kauker.unofficial.grocy.routes
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Check
@@ -16,10 +22,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.material.*
+import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumnDefaults
+import androidx.wear.compose.foundation.lazy.ScalingLazyListState
+import androidx.wear.compose.foundation.rememberActiveFocusRequester
+import androidx.wear.compose.material.Chip
+import androidx.wear.compose.material.CompactChip
+import androidx.wear.compose.material.Icon
+import androidx.wear.compose.material.LocalContentColor
+import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.dialog.Confirmation
-import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
-import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.navscaffold.ScaffoldContext
 import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import de.kauker.unofficial.grocy.MainViewModel
@@ -28,12 +43,13 @@ import de.kauker.unofficial.grocy.theme.Typography
 import de.kauker.unofficial.grocy.utils.distanceTo
 import de.kauker.unofficial.grocy.views.TextInput
 import de.kauker.unofficial.sdk.grocy.models.GrocyProduct
+import de.kauker.unofficial.sdk.grocy.transactions.sub.addToShoppingList
 import kotlin.math.roundToInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@OptIn(ExperimentalHorologistComposeLayoutApi::class)
+@OptIn(ExperimentalHorologistApi::class, ExperimentalWearFoundationApi::class)
 @Composable
 fun AddProductRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) {
     val configuration = LocalConfiguration.current
@@ -128,7 +144,7 @@ fun AddProductRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>
                 onClick = {
                     coroutineScope.launch {
                         withContext(Dispatchers.IO) {
-                            if(!selectedProduct!!.addToShoppingList(vm.vmHomeRoute.selectedShoppingList?.id?.toInt()?: 1, sc.scrollableState.centerItemIndex)) return@withContext
+                            selectedProduct!!.addToShoppingList(vm.vmHomeRoute.selectedShoppingList!!, sc.scrollableState.centerItemIndex)
                             showDoneDialog = true
                         }
                     }
@@ -145,7 +161,7 @@ fun AddProductRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>
         val searchLower = search.lowercase()
 
         vm.grocyClient.OBJECTS_PRODUCTS.entries.forEach fE@ {
-            val values: Array<String> = arrayOf(it.value.name, it.value.description, it.value.productGroup?.name?: "", it.value.location?.name?: "")
+            val values: Array<String> = arrayOf(it.value.name, it.value.description?: "", it.value.productGroup?.name?: "", it.value.location?.name?: "")
             values.forEach { c1 ->
                 val diff = c1.distanceTo(search)
                 if(diff > 0.6) {

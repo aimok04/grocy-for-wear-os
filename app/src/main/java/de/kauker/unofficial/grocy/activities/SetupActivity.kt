@@ -25,14 +25,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.wear.compose.material.*
+import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.foundation.rememberActiveFocusRequester
+import androidx.wear.compose.material.Button
+import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.Chip
+import androidx.wear.compose.material.ChipDefaults
+import androidx.wear.compose.material.Icon
+import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Text
 import androidx.wear.remote.interactions.RemoteActivityHelper
 import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.Wearable
-import com.google.android.horologist.compose.focus.rememberActiveFocusRequester
-import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import de.kauker.unofficial.grocy.GOOGLE_PLAY_VERSION
 import de.kauker.unofficial.grocy.MainActivity
@@ -72,7 +81,7 @@ fun SetupTitle() {
     )
 }
 
-@OptIn(ExperimentalHorologistComposeLayoutApi::class)
+@OptIn(ExperimentalWearFoundationApi::class, ExperimentalHorologistApi::class)
 @Composable
 fun SetupConfirmationComp(activity: SetupActivity, apiUrl: String, apiToken: String) {
     val focusRequester = rememberActiveFocusRequester()
@@ -145,8 +154,8 @@ fun SetupConfirmationComp(activity: SetupActivity, apiUrl: String, apiToken: Str
     }
 }
 
+@OptIn(ExperimentalWearFoundationApi::class, ExperimentalHorologistApi::class)
 @SuppressLint("VisibleForTests")
-@OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
 fun SetupComp(activity: SetupActivity, vm: SetupViewModel) {
     var apiUrl by remember { mutableStateOf<String?>(null) }
