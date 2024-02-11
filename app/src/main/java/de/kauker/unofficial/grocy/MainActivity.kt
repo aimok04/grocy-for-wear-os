@@ -16,6 +16,8 @@ import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import com.google.android.horologist.compose.navscaffold.ScaffoldContext
 import com.google.android.horologist.compose.navscaffold.WearNavScaffold
 import com.google.android.horologist.compose.navscaffold.scalingLazyColumnComposable
+import de.kauker.unofficial.GROCY_PREDEFINED_API_TOKEN
+import de.kauker.unofficial.GROCY_PREDEFINED_API_URL
 import de.kauker.unofficial.grocy.activities.SetupActivity
 import de.kauker.unofficial.grocy.models.Route
 import de.kauker.unofficial.grocy.routes.AddProductRoute
@@ -23,6 +25,7 @@ import de.kauker.unofficial.grocy.routes.HomeRoute
 import de.kauker.unofficial.grocy.routes.SelectListRoute
 import de.kauker.unofficial.grocy.routes.SettingsRoute
 import de.kauker.unofficial.grocy.routes.alerts.AlertOfflineRoute
+import de.kauker.unofficial.grocy.routes.alerts.AlertUnsupportedRoute
 import de.kauker.unofficial.grocy.routes.alerts.AlertWelcomeRoute
 import de.kauker.unofficial.grocy.routes.delete.DeleteDoneRoute
 import de.kauker.unofficial.grocy.routes.settings.SettingsLegalRoute
@@ -39,6 +42,15 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
         ambientController = AmbientModeSupport.attach(this)
 
         val sp = getSharedPreferences("credentials", MODE_PRIVATE)
+
+        /* apply predefined api url and token if defined */
+        if(GROCY_PREDEFINED_API_URL.isNotEmpty() || GROCY_PREDEFINED_API_TOKEN.isNotEmpty()) {
+            val editor = sp.edit()
+            if(GROCY_PREDEFINED_API_URL.isNotEmpty()) sp.edit().putString("apiUrl", GROCY_PREDEFINED_API_URL).apply()
+            if(GROCY_PREDEFINED_API_TOKEN.isNotEmpty()) sp.edit().putString("apiToken", GROCY_PREDEFINED_API_TOKEN).apply()
+            editor.apply()
+        }
+
         if (!sp.contains("apiUrl") || !sp.contains("apiToken")) {
             startActivity(Intent(this, SetupActivity().javaClass))
             finish()
@@ -110,7 +122,8 @@ fun WearApp(
                 Route("settings/legal") { SettingsLegalRoute(sc = it) },
 
                 Route("alerts/welcome") { AlertWelcomeRoute(vm = vm, sc = it) },
-                Route("alerts/offline") { AlertOfflineRoute(vm = vm, sc = it) }
+                Route("alerts/offline") { AlertOfflineRoute(vm = vm, sc = it) },
+                Route("alerts/unsupported") { AlertUnsupportedRoute(vm = vm, sc = it) }
             )
 
             WearNavScaffold(

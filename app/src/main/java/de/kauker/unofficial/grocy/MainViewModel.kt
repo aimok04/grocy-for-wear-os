@@ -7,12 +7,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import de.kauker.unofficial.GROCY_SUPPORTED_VERSIONS
 import de.kauker.unofficial.grocy.routes.HomeViewModel
 import de.kauker.unofficial.grocy.routes.settings.SettingsProductGroupsOrderViewModel
 import de.kauker.unofficial.sdk.grocy.GrocyClient
+import de.kauker.unofficial.sdk.grocy.models.GrocySystemInfo
+import de.kauker.unofficial.sdk.grocy.models.retrieveSystemInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class MainViewModel constructor(apiUrl: String, apiToken: String, application: Application) :
+class MainViewModel(apiUrl: String, apiToken: String, application: Application) :
     AndroidViewModel(
         application
     ) {
@@ -34,9 +42,29 @@ class MainViewModel constructor(apiUrl: String, apiToken: String, application: A
     )
 
     var grocyClient = GrocyClient(application, apiUrl, apiToken)
+    var grocySystemInfo: GrocySystemInfo? = null
 
     init {
         amoledMode = settingsSp.getBoolean("amoledMode", true)
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    grocySystemInfo = grocyClient.retrieveSystemInfo()
+                    if(GROCY_SUPPORTED_VERSIONS.contains(grocySystemInfo?.grocyVersion?.version?: "")) return@withContext
+
+                    /* do not open alert twice */
+                    if(settingsSp.getString("latestUnsupportedVersion", "") == grocySystemInfo?.grocyVersion?.version) return@withContext
+
+                    withContext(Dispatchers.Main) {
+                        delay(500)
+                        rootNavController?.navigate("alerts/unsupported")
+                    }
+                }catch(e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
 }

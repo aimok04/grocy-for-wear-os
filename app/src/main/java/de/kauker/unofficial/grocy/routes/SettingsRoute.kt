@@ -50,6 +50,8 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
             context.getSharedPreferences("credentials", ComponentActivity.MODE_PRIVATE)
                 .edit().remove("apiUrl").remove("apiToken").apply()
 
+            vm.settingsSp.edit().remove("latestUnsupportedVersion").apply()
+
             context.startActivity(Intent(context, SetupActivity().javaClass))
             if(context is Activity) context.finish()
         }, onClickSecondary = {

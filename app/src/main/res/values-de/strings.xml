@@ -43,6 +43,10 @@
     <string name="dialog_offline_title">Nun kann GFWO komplett offline funktionieren!</string>
     <string name="dialog_offline_message">Lösche, bearbeite oder füge Einträge hinzu — komplett offline. Die App wird deine Änderungen synchronisieren, sobald du wieder online bist.</string>
 
+    <!-- Unsupported -->
+    <string name="dialog_unsupported_title">Dein Server wird möglicherweise nicht unterstützt.</string>
+    <string name="dialog_unsupported_message">Die Version \"%s\" wurde (noch) nicht auf Unterstützung geprüft. Möglicherweise könnte die App trotzdem funktionieren.\n\nWenn du auf Probleme stößt, dann melde dich doch via Google Play (E-Mail) oder GitHub.</string>
+
     <!-- HomeRoute -->
     <string name="main_title">Einkaufsliste</string>
     <string name="main_prompt_connection_issues">Es gibt Probleme mit der Verbindung. Stimmen die Verbindungsdaten?</string>

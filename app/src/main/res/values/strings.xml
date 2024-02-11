@@ -43,6 +43,10 @@
     <string name="dialog_offline_title">Now, GFWO can work completely offline!</string>
     <string name="dialog_offline_message">Add, edit or remove items while you are completely offline and the app will synchronize your changes when you get back online.</string>
 
+    <!-- Unsupported -->
+    <string name="dialog_unsupported_title">Your server might not be supported.</string>
+    <string name="dialog_unsupported_message">The version \"%s\" was not checked for compatibility (yet). The app might still work.\n\nIf you encounter any issues, please let me know via Google Play (mail) or GitHub.</string>
+
     <!-- HomeRoute -->
     <string name="main_title">Shopping list</string>
     <string name="main_prompt_connection_issues">Could not connect to server. Are your credentials valid?</string>
