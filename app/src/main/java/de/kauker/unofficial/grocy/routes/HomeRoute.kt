@@ -243,10 +243,15 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
+    val density = LocalDensity.current
+
     val entry = item.entry
     val alpha = if (entry.done && !vm.vm.ambientMode) 0.5f else 1f
+
+    var showMoreOptionsOverlay by remember { mutableStateOf(false) }
 
     Box(
         Modifier.padding(start = 12.dp, end = 12.dp)
@@ -259,15 +264,19 @@ fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
                 )
                 .padding(1.dp)
         ) {
+            var size by remember { mutableStateOf(DpSize.Zero) }
+
             TitleCard(
+                modifier = Modifier
+                    .alpha(alpha)
+                    .onGloballyPositioned {
+                        size = with(density) { DpSize(it.size.width.toDp(), it.size.height.toDp()) }
+                    },
                 title = { Text(entry.product?.name?: entry.note?: "Unknown item") },
                 backgroundPainter =
                     if(vm.vm.ambientMode) CardDefaults.cardBackgroundPainter(Color.Black, Color.Black) else CardDefaults.cardBackgroundPainter(),
-                modifier = Modifier
-                    .alpha(alpha),
-                onClick = {
-                    vm.toggleShoppingListEntryDoneStatus(entry)
-                }
+                onClick = { },
+                enabled = false
             ) {
                 if(entry.product != null && entry.note?.isNotEmpty() == true) {
                     Text(
@@ -281,6 +290,34 @@ fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
                 val quantityUnit =
                     if (entry.quantityUnit == null) "" else if (entry.amount == "1") entry.quantityUnit?.name else entry.quantityUnit?.namePlural
                 Text(entry.amount + " " + quantityUnit)
+            }
+
+            /* click target */
+            Box(
+                Modifier
+                    .size(size)
+                    .clip(MaterialTheme.shapes.large)
+                    .background(if (showMoreOptionsOverlay) Color.Black.copy(alpha = 0.5f) else Color.Transparent)
+                    .combinedClickable(onLongClick = {
+                        showMoreOptionsOverlay = !showMoreOptionsOverlay
+                    }) {
+                        if(showMoreOptionsOverlay) {
+                            showMoreOptionsOverlay = false
+                            return@combinedClickable
+                        }
+
+                        vm.toggleShoppingListEntryDoneStatus(entry)
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                if(!showMoreOptionsOverlay) return
+
+                CompactButton(
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error, contentColor = MaterialTheme.colors.onError),
+                    onClick = { vm.deleteShoppingListEntry(item.entry); showMoreOptionsOverlay = false }
+                ) {
+                    Icon(Icons.Rounded.Delete, stringResource(id = R.string.delete))
+                }
             }
         }
     }
@@ -440,7 +477,16 @@ class HomeViewModel(
         }
     }
 
-    fun deleteDoneEntries(): Boolean {
+    fun deleteShoppingListEntry(entry: GrocyShoppingListEntry) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                entry.delete()
+                reloadUi()
+            }
+        }
+    }
+
+    suspend fun deleteDoneEntries(): Boolean {
         shoppingListItems.forEach {
             if(it !is ShoppingListGrocyItemEntry) return@forEach
             if(!it.entry.done) return@forEach
