@@ -75,6 +75,7 @@
 
     <string name="settings_button_product_groups_order">Reihenfolge ändern</string>
     <string name="settings_button_amoled">Amoled</string>
+    <string name="settings_button_about_server">Über diesen Server</string>
     <string name="settings_button_legal_stuff">Rechtliches</string>
 
     <!-- SettingsProductGroupsOrderRoute -->

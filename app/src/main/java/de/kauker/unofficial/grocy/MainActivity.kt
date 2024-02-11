@@ -28,6 +28,7 @@ import de.kauker.unofficial.grocy.routes.alerts.AlertOfflineRoute
 import de.kauker.unofficial.grocy.routes.alerts.AlertUnsupportedRoute
 import de.kauker.unofficial.grocy.routes.alerts.AlertWelcomeRoute
 import de.kauker.unofficial.grocy.routes.delete.DeleteDoneRoute
+import de.kauker.unofficial.grocy.routes.settings.SettingsAboutServerRoute
 import de.kauker.unofficial.grocy.routes.settings.SettingsLegalRoute
 import de.kauker.unofficial.grocy.routes.settings.SettingsProductGroupsOrderRoute
 import de.kauker.unofficial.grocy.theme.WearAppTheme
@@ -118,8 +119,9 @@ fun WearApp(
                 Route("delete/done") { DeleteDoneRoute(vm = vm, sc = it) },
 
                 Route("settings") { SettingsRoute(vm = vm, sc = it) },
-                Route("settings/productGroupsOrder") { SettingsProductGroupsOrderRoute(mainVM = vm, sc = it) },
+                Route("settings/aboutServer") { SettingsAboutServerRoute(vm = vm, sc = it) },
                 Route("settings/legal") { SettingsLegalRoute(sc = it) },
+                Route("settings/productGroupsOrder") { SettingsProductGroupsOrderRoute(mainVM = vm, sc = it) },
 
                 Route("alerts/welcome") { AlertWelcomeRoute(vm = vm, sc = it) },
                 Route("alerts/offline") { AlertOfflineRoute(vm = vm, sc = it) },

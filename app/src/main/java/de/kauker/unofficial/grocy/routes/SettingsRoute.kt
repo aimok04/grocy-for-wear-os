@@ -115,6 +115,18 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
+                icon = { Icon(Icons.Rounded.Info, stringResource(id = R.string.settings_button_about_server)) },
+                label = { Text(stringResource(id = R.string.settings_button_about_server)) },
+                colors = ChipDefaults.secondaryChipColors(),
+                onClick = { vm.rootNavController?.navigate("settings/aboutServer") }
+            )
+        }
+
+        item {
+            Chip(
+                modifier = Modifier
+                    .padding(top = 4.dp)
+                    .fillMaxWidth(),
                 icon = { Icon(Icons.Rounded.Copyright, stringResource(id = R.string.settings_button_legal_stuff)) },
                 label = { Text(stringResource(id = R.string.settings_button_legal_stuff)) },
                 colors = ChipDefaults.secondaryChipColors(),
