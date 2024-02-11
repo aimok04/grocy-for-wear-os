@@ -534,6 +534,11 @@ class HomeViewModel(
             }
         }
 
+        if (unsorted.size != 0) {
+            mShoppingListItems.add(ShoppingListTitleEntry(titleId = R.string.main_list_unsorted))
+            for (entry in unsorted) mShoppingListItems.add(ShoppingListGrocyItemEntry(entry))
+        }
+
         for (group in groupOrder) {
             mShoppingListItems.add(ShoppingListTitleEntry(title = group.name?: ""))
             for (entry in sectionsMap[group]!!) mShoppingListItems.add(
@@ -541,11 +546,6 @@ class HomeViewModel(
                     entry
                 )
             )
-        }
-
-        if (unsorted.size != 0) {
-            mShoppingListItems.add(ShoppingListTitleEntry(titleId = R.string.main_list_unsorted))
-            for (entry in unsorted) mShoppingListItems.add(ShoppingListGrocyItemEntry(entry))
         }
 
         if (done.size != 0) {
