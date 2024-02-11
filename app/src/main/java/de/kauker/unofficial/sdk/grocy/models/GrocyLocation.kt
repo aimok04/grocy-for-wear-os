@@ -15,15 +15,13 @@ class GrocyLocation(
     @Serializable(with = JsonAsStringSerializer::class)
     var description: String?,
 
-    fun parse(json: JSONObject) {
-        id = json.getString("id")
-        name = json.getString("name")
-        description = json.getString("description")
-        timestamp = json.getString("row_created_timestamp")
-        isFreezer = json.getString("is_freezer").equals("1")
-    }
+    @SerialName("row_created_timestamp")
+    var timestamp: String?,
 
-    override fun toString(): String {
-        return "GrocyLocation(id='$id', name='$name', description='$description', timestamp='$timestamp', isFreezer=$isFreezer)"
-    }
+    @Serializable(with = JsonAsStringSerializer::class)
+    var is_freezer: String?
+) {
+    val isFreezer: Boolean
+        get() { return is_freezer == "1" }
+
 }

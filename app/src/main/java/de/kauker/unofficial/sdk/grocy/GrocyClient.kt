@@ -3,6 +3,7 @@ package de.kauker.unofficial.sdk.grocy
 import android.content.Context
 import de.kauker.unofficial.grocy.utils.jsonInstance
 import de.kauker.unofficial.sdk.grocy.models.*
+import de.kauker.unofficial.sdk.grocy.transactions.GrocyTransactionsManager
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -15,6 +16,8 @@ class GrocyClient(
     val apiToken: String
 ) {
 
+    val transactionsManager = GrocyTransactionsManager(context, this)
+
     val OBJECTS_LOCATIONS = HashMap<String, GrocyLocation>()
     val OBJECTS_PRODUCT_GROUPS = HashMap<String, GrocyProductGroup>()
     val OBJECTS_QUANTITY_UNITS = HashMap<String, GrocyQuantityUnit>()
@@ -22,6 +25,9 @@ class GrocyClient(
     val OBJECTS_SHOPPING_LISTS = HashMap<Number, GrocyShoppingList>()
     val OBJECTS_PRODUCTS = HashMap<String, GrocyProduct>()
     val OBJECTS_SHOPPING_LIST_ENTRIES = HashMap<String, GrocyShoppingListEntry>()
+
+    var shoppingListEntries = mutableListOf<GrocyShoppingListEntry>()
+    var shoppingLists = mutableListOf<GrocyShoppingList>()
 
     val okHttpClient: OkHttpClient = OkHttpClient()
     val cache = context.getSharedPreferences("grocyCache", Context.MODE_PRIVATE)
@@ -45,6 +51,7 @@ class GrocyClient(
             list.add(OBJECTS_SHOPPING_LISTS[id]!!)
         }
 
+        shoppingLists = list
         return list
     }
 
@@ -83,6 +90,7 @@ class GrocyClient(
                 product.quantityUnit = OBJECTS_QUANTITY_UNITS[product._quantityUnitId]!!
         }
 
+        shoppingListEntries = list
         return list
     }
 

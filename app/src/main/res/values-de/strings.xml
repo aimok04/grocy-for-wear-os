@@ -50,6 +50,10 @@
 
     <string name="main_last_refresh">Zuletzt abgerufen</string>
 
+    <string name="main_sync_ongoing">Synchronisieren</string>
+    <string name="main_sync_failed">Synchronisierung fehlgeschlagen</string>
+    <string name="main_sync_done">Synchronisierung erfolgreich</string>
+
     <!-- SelectListRoute -->
     <string name="select_list_route_title">Liste auswählen</string>
 

@@ -50,6 +50,10 @@
 
     <string name="main_last_refresh">Last refresh</string>
 
+    <string name="main_sync_ongoing">Currently syncing</string>
+    <string name="main_sync_failed">Sync failed</string>
+    <string name="main_sync_done">Done syncing</string>
+
     <!-- SelectListRoute -->
     <string name="select_list_route_title">Select list</string>
 

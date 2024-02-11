@@ -1,25 +1,37 @@
 package de.kauker.unofficial.grocy.routes
 
 import android.app.Application
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.ExpandMore
+import androidx.compose.material.icons.rounded.SyncAlt
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
@@ -119,6 +131,71 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                             text = dateStr,
                             style = MaterialTheme.typography.caption3,
                             textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+
+            /* display transaction syncing info */
+            if(vm.transactionSyncTotalCount != 0) item {
+                val progressAnimatable = remember { Animatable(0f) }
+                val finishedAnimatable = remember { Animatable(0f) }
+                val closeAnimatable = remember { Animatable(1f) }
+
+                suspend fun endAnimation() {
+                    finishedAnimatable.animateTo(2f, tween(durationMillis = 500))
+                    closeAnimatable.animateTo(0f, tween(delayMillis = 1000, durationMillis = 500))
+
+                    vm.transactionSyncFailed = false
+                    vm.transactionSyncCompletedCount = 0
+                    vm.transactionSyncTotalCount = 0
+                }
+
+                LaunchedEffect(vm.transactionSyncFailed) {
+                    progressAnimatable.animateTo(0f)
+                    endAnimation()
+                }
+
+                LaunchedEffect(vm.transactionSyncCompletedCount, vm.transactionSyncTotalCount) {
+                    if(vm.transactionSyncFailed) return@LaunchedEffect
+
+                    val newValue = vm.transactionSyncCompletedCount.toFloat() / vm.transactionSyncTotalCount.toFloat()
+                    progressAnimatable.animateTo(newValue, tween(durationMillis = 250))
+
+                    if(newValue != 1f) return@LaunchedEffect
+                    endAnimation()
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scale(closeAnimatable.value),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        indicatorColor = if(vm.transactionSyncFailed) MaterialTheme.colors.error else MaterialTheme.colors.primary,
+                        progress = progressAnimatable.value
+                    )
+
+                    Icon(
+                        modifier = Modifier.scale((1f - finishedAnimatable.value).takeIf { it > 0f }?: 0f),
+                        imageVector = Icons.Rounded.SyncAlt,
+                        contentDescription = stringResource(id = R.string.main_sync_ongoing)
+                    )
+
+                    if(vm.transactionSyncFailed) {
+                        Icon(
+                            modifier = Modifier.scale((finishedAnimatable.value - 1f).takeIf { it > 0f }?: 0f),
+                            imageVector = Icons.Rounded.Close,
+                            contentDescription = stringResource(id = R.string.main_sync_failed),
+                            tint = MaterialTheme.colors.error
+                        )
+                    }else{
+                        Icon(
+                            modifier = Modifier.scale((finishedAnimatable.value - 1f).takeIf { it > 0f }?: 0f),
+                            imageVector = Icons.Rounded.Done,
+                            contentDescription = stringResource(id = R.string.main_sync_done),
+                            tint = MaterialTheme.colors.primary
                         )
                     }
                 }
@@ -301,7 +378,7 @@ fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
                     .combinedClickable(onLongClick = {
                         showMoreOptionsOverlay = !showMoreOptionsOverlay
                     }) {
-                        if(showMoreOptionsOverlay) {
+                        if (showMoreOptionsOverlay) {
                             showMoreOptionsOverlay = false
                             return@combinedClickable
                         }
@@ -336,8 +413,10 @@ class HomeViewModel(
     val shoppingListItems = mutableStateListOf<ShoppingListEntry>()
     val shoppingLists = mutableStateListOf<GrocyShoppingList>()
 
-    private var shoppingListEntries = ArrayList<GrocyShoppingListEntry>()
-    private var mShoppingLists = ArrayList<GrocyShoppingList>()
+    var transactionSyncFailed by mutableStateOf(false)
+    var transactionSyncTotalCount by mutableIntStateOf(0)
+    var transactionSyncCompletedCount by mutableIntStateOf(0)
+
     var cachedDate by mutableStateOf<Date?>(null)
 
     fun load(autoRefresh: Boolean = false) {
@@ -345,7 +424,9 @@ class HomeViewModel(
             if(autoRefresh) {
                 withContext(Dispatchers.IO) {
                     try {
-                        shoppingListEntries = vm.grocyClient.fetchShoppingListEntries(false)
+                        vm.grocyClient.fetchShoppingListEntries(false)
+                        vm.grocyClient.transactionsManager.applyAll(false)
+
                         reloadUi()
                     } catch (throwable: Throwable) {
                         throwable.printStackTrace()
@@ -360,8 +441,10 @@ class HomeViewModel(
 
             withContext(Dispatchers.IO) {
                 try {
-                    mShoppingLists = vm.grocyClient.fetchShoppingLists(true)
-                    shoppingListEntries = vm.grocyClient.fetchShoppingListEntries(true)
+                    vm.grocyClient.fetchShoppingLists(true)
+                    vm.grocyClient.fetchShoppingListEntries(true)
+
+                    vm.grocyClient.transactionsManager.applyAll(true)
 
                     viewModelScope.launch {
                         delay(1000)
@@ -372,9 +455,17 @@ class HomeViewModel(
                     }
 
                     try {
-                        mShoppingLists = vm.grocyClient.fetchShoppingLists(false)
-                        shoppingListEntries = vm.grocyClient.fetchShoppingListEntries(false)
+                        vm.grocyClient.fetchShoppingLists(false)
+                        vm.grocyClient.fetchShoppingListEntries(false)
+
+                        vm.grocyClient.transactionsManager.applyAll(false)
                         reloadUi()
+
+                        vm.grocyClient.transactionsManager.flushAll { failed, total, completed ->
+                            transactionSyncFailed = failed
+                            transactionSyncTotalCount = total
+                            transactionSyncCompletedCount = completed
+                        }
 
                         cachedDate = null
                     } catch (throwable: Throwable) {
@@ -390,7 +481,7 @@ class HomeViewModel(
 
     private fun reloadUi() {
         shoppingLists.clear()
-        shoppingLists.addAll(mShoppingLists)
+        shoppingLists.addAll(vm.grocyClient.shoppingLists)
 
         /* get selected list, replaced with first list if its null */
         selectedShoppingList = vm.grocyClient.OBJECTS_SHOPPING_LISTS[vm.settingsSp.getInt("selectedShoppingListId", -1)]?: shoppingLists[0]
@@ -401,7 +492,7 @@ class HomeViewModel(
         val unsorted = ArrayList<GrocyShoppingListEntry>()
         val done = ArrayList<GrocyShoppingListEntry>()
 
-        for (entry in shoppingListEntries) {
+        for (entry in vm.grocyClient.shoppingListEntries) {
             if(entry.shoppingListId != selectedShoppingList?.id) continue
 
             if (entry.done) {
