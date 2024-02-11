@@ -85,10 +85,18 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
     }
 
     LaunchedEffect(Unit) {
-        if(mainVM.settingsSp.getBoolean("wasWelcomed", false)) return@LaunchedEffect
+        if(mainVM.settingsSp.getBoolean("wasWelcomed", false)) {
+            if(mainVM.settingsSp.getBoolean("wasIntroducedToOfflineFeatures", false)) return@LaunchedEffect
+
+            mainVM.rootNavController?.navigate("alerts/offline")
+            mainVM.settingsSp.edit().putBoolean("wasIntroducedToOfflineFeatures", true).apply()
+            return@LaunchedEffect
+        }
+
         mainVM.rootNavController?.navigate("alerts/welcome")
 
         mainVM.settingsSp.edit().putBoolean("wasWelcomed", true).apply()
+        mainVM.settingsSp.edit().putBoolean("wasIntroducedToOfflineFeatures", true).apply()
     }
 
     if (!vm.loaded && !vm.connectionIssues) {

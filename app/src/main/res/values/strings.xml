@@ -39,6 +39,10 @@
     <string name="dialog_welcome_google_play_message">Feel free to review this app to make it even better in the future :)</string>
     <string name="dialog_welcome_foss_message">Feel free to contribute to this project, for example by translating or by opening an issue :)</string>
 
+    <!-- Offline -->
+    <string name="dialog_offline_title">Now, GFWO can work completely offline!</string>
+    <string name="dialog_offline_message">Add, edit or remove items while you are completely offline and the app will synchronize your changes when you get back online.</string>
+
     <!-- HomeRoute -->
     <string name="main_title">Shopping list</string>
     <string name="main_prompt_connection_issues">Could not connect to server. Are your credentials valid?</string>

@@ -39,6 +39,10 @@
     <string name="dialog_welcome_google_play_message">Lass doch eine Bewertung da, damit die App in Zukunft noch besser werden kann :)</string>
     <string name="dialog_welcome_foss_message">Wenn du möchtest, kannst du gerne dem Projekt beitragen, indem du die App zum Beispiel übersetzt oder ein Issue öffnest :)</string>
 
+    <!-- Offline -->
+    <string name="dialog_offline_title">Nun kann GFWO komplett offline funktionieren!</string>
+    <string name="dialog_offline_message">Lösche, bearbeite oder füge Einträge hinzu — komplett offline. Die App wird deine Änderungen synchronisieren, sobald du wieder online bist.</string>
+
     <!-- HomeRoute -->
     <string name="main_title">Einkaufsliste</string>
     <string name="main_prompt_connection_issues">Es gibt Probleme mit der Verbindung. Stimmen die Verbindungsdaten?</string>

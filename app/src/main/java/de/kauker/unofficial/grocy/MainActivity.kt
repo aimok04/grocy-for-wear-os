@@ -9,9 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavGraphBuilder
 import androidx.wear.ambient.AmbientModeSupport
+import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import com.google.android.horologist.compose.navscaffold.ScaffoldContext
 import com.google.android.horologist.compose.navscaffold.WearNavScaffold
@@ -22,6 +22,7 @@ import de.kauker.unofficial.grocy.routes.AddProductRoute
 import de.kauker.unofficial.grocy.routes.HomeRoute
 import de.kauker.unofficial.grocy.routes.SelectListRoute
 import de.kauker.unofficial.grocy.routes.SettingsRoute
+import de.kauker.unofficial.grocy.routes.alerts.AlertOfflineRoute
 import de.kauker.unofficial.grocy.routes.alerts.AlertWelcomeRoute
 import de.kauker.unofficial.grocy.routes.delete.DeleteDoneRoute
 import de.kauker.unofficial.grocy.routes.settings.SettingsLegalRoute
@@ -108,7 +109,8 @@ fun WearApp(
                 Route("settings/productGroupsOrder") { SettingsProductGroupsOrderRoute(mainVM = vm, sc = it) },
                 Route("settings/legal") { SettingsLegalRoute(sc = it) },
 
-                Route("alerts/welcome") { AlertWelcomeRoute(vm = vm, sc = it) }
+                Route("alerts/welcome") { AlertWelcomeRoute(vm = vm, sc = it) },
+                Route("alerts/offline") { AlertOfflineRoute(vm = vm, sc = it) }
             )
 
             WearNavScaffold(
