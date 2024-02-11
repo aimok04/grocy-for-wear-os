@@ -43,7 +43,7 @@ import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.Wearable
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
-import de.kauker.unofficial.grocy.GOOGLE_PLAY_VERSION
+import de.kauker.unofficial.GOOGLE_PLAY_VERSION
 import de.kauker.unofficial.grocy.MainActivity
 import de.kauker.unofficial.grocy.R
 import de.kauker.unofficial.grocy.theme.WearAppTheme

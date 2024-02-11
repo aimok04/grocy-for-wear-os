@@ -17,7 +17,7 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.dialog.Alert
 import com.google.android.horologist.compose.navscaffold.ScaffoldContext
-import de.kauker.unofficial.grocy.GOOGLE_PLAY_VERSION
+import de.kauker.unofficial.GOOGLE_PLAY_VERSION
 import de.kauker.unofficial.grocy.MainViewModel
 import de.kauker.unofficial.grocy.R
 
@@ -30,7 +30,7 @@ fun AlertWelcomeRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListStat
         icon = {
             Icon(
                 Icons.Rounded.WavingHand,
-                contentDescription = stringResource(id = R.string.delete),
+                contentDescription = stringResource(id = R.string.dialog_welcome_title),
                 modifier = Modifier
                     .size(24.dp)
                     .wrapContentSize(align = Alignment.Center),
