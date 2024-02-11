@@ -1,6 +1,6 @@
 package de.kauker.unofficial
 
-const val GOOGLE_PLAY_VERSION = true
+const val GOOGLE_PLAY_VERSION = false
 
 const val GROCY_PREDEFINED_API_URL = ""
 const val GROCY_PREDEFINED_API_TOKEN = ""
