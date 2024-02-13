@@ -1,7 +1,5 @@
 package de.kauker.unofficial.grocy.routes.alerts
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -19,19 +17,17 @@ import androidx.wear.compose.material.CompactChip
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.dialog.Alert
 import com.google.android.horologist.compose.navscaffold.ScaffoldContext
 import de.kauker.unofficial.grocy.MainViewModel
 import de.kauker.unofficial.grocy.R
+import de.kauker.unofficial.grocy.views.RotaryScrollAlert
 
 @Composable
 fun AlertUnsupportedRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) {
     val serverVersion = vm.grocySystemInfo?.grocyVersion?.version?: "Unknown"
 
-    Alert(
-        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
+    RotaryScrollAlert(
         scrollState = sc.scrollableState,
-        contentPadding = PaddingValues(start = 10.dp, end = 10.dp, top = 24.dp, bottom = 52.dp),
         icon = {
             Icon(
                 Icons.Rounded.Support,

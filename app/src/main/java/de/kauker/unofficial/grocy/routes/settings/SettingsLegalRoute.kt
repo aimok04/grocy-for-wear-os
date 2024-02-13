@@ -1,19 +1,34 @@
 package de.kauker.unofficial.grocy.routes.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MenuBook
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
@@ -25,7 +40,6 @@ import androidx.wear.compose.material.CompactChip
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.TitleCard
 import androidx.wear.compose.material.dialog.Alert
 import androidx.wear.compose.material.dialog.Dialog
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
@@ -58,7 +72,8 @@ fun SettingsLegalRoute(sc: ScaffoldContext<ScalingLazyListState>) {
         modifier = Modifier
             .focusRequester(focusRequester)
             .rotaryWithScroll(focusRequester, sc.scrollableState),
-        state = sc.scrollableState
+        state = sc.scrollableState,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             Text(
@@ -76,28 +91,49 @@ fun SettingsLegalRoute(sc: ScaffoldContext<ScalingLazyListState>) {
             items(libs!!.libraries.size) {
                 val library = libs!!.libraries[it]
 
-                TitleCard(
-                    title = { Text(library.name + " @ " + library.artifactVersion) },
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
-                        .background(MaterialTheme.colors.background, RoundedCornerShape(24.dp)),
-                    onClick = {
-                        selectedLibrary = library
-                        showDetailsDialog = true
-                    },
-                    backgroundPainter = painterResource(id = R.drawable.empty_background)
+                Box(
+                    Modifier
+                        .padding(4.dp)
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(MaterialTheme.colors.surface, RoundedCornerShape(24.dp))
+                        .clickable {
+                            selectedLibrary = library
+                            showDetailsDialog = true
+                        }
                 ) {
-                    val developers = ArrayList<String?>()
-                    for (developer in library.developers) developers.add(developer.name)
-
-                    Text(developers.joinToString(", "))
-
-                    Row {
-                        for (license in library.licenses) CompactChip(
-                            label = { Text(license.name) },
-                            onClick = { },
-                            colors = ChipDefaults.gradientBackgroundChipColors()
+                    Column(
+                        Modifier.padding(8.dp)
+                    ) {
+                        Text(
+                            text = library.name + " @ " + library.artifactVersion,
+                            style = MaterialTheme.typography.title3,
+                            maxLines = 4,
+                            overflow = TextOverflow.Ellipsis
                         )
+
+                        val developers = ArrayList<String?>()
+                        for (developer in library.developers) developers.add(developer.name)
+
+                        Text(
+                            text = developers.joinToString(", "),
+                            style = MaterialTheme.typography.caption2,
+                            maxLines = 4,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        Row(
+                            Modifier.padding(top = 8.dp)
+                        ) {
+                            for (license in library.licenses) CompactChip(
+                                label = { Text(
+                                    license.name,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                ) },
+                                onClick = { },
+                                colors = ChipDefaults.gradientBackgroundChipColors()
+                            )
+                        }
                     }
                 }
             }
