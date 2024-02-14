@@ -2,10 +2,8 @@ package de.kauker.unofficial.grocy.routes.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -40,8 +38,6 @@ import androidx.wear.compose.material.CompactChip
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.dialog.Alert
-import androidx.wear.compose.material.dialog.Dialog
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.navscaffold.ScaffoldContext
 import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
@@ -49,6 +45,7 @@ import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.util.withContext
 import de.kauker.unofficial.grocy.R
+import de.kauker.unofficial.grocy.views.RotaryScrollAlert
 
 @OptIn(ExperimentalHorologistApi::class, ExperimentalWearFoundationApi::class)
 @Composable
@@ -62,8 +59,10 @@ fun SettingsLegalRoute(sc: ScaffoldContext<ScalingLazyListState>) {
 
     var showDetailsDialog by remember { mutableStateOf(false) }
     var selectedLibrary: Library? by remember { mutableStateOf(null) }
-    Dialog(showDialog = showDetailsDialog, onDismissRequest = { showDetailsDialog = false }) {
-        AlertLegalDetails(selectedLibrary) { showDetailsDialog = false }
+
+    if(showDetailsDialog) {
+        AlertLegalDetails(selectedLibrary, sc) { showDetailsDialog = false }
+        return
     }
 
     val focusRequester = rememberActiveFocusRequester()
@@ -142,12 +141,15 @@ fun SettingsLegalRoute(sc: ScaffoldContext<ScalingLazyListState>) {
 }
 
 @Composable
-fun AlertLegalDetails(library: Library?, onClose: () -> Unit) {
+fun AlertLegalDetails(
+    library: Library?,
+    sc: ScaffoldContext<ScalingLazyListState>,
+    onClose: () -> Unit
+) {
     if (library == null) return
 
-    Alert(
-        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
-        contentPadding = PaddingValues(start = 10.dp, end = 10.dp, top = 24.dp, bottom = 52.dp),
+    RotaryScrollAlert(
+        scrollState = sc.scrollableState,
         icon = {
             Icon(
                 Icons.Rounded.MenuBook,
@@ -163,7 +165,7 @@ fun AlertLegalDetails(library: Library?, onClose: () -> Unit) {
                 text = library.description!!,
                 style = MaterialTheme.typography.body2
             )
-        },
+        }
     ) {
         val licenses = library.licenses.toList()
         items(licenses.size) {
