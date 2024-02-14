@@ -87,6 +87,7 @@ dependencies {
   implementation libs.play.services.wearable
   implementation libs.androidx.wear.input
   implementation libs.androidx.wear
+  implementation libs.androidx.core.splashscreen
 
   implementation libs.kotlinx.serialization.json
 
