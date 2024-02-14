@@ -71,16 +71,24 @@ class GrocyClient(
             list.add(OBJECTS_SHOPPING_LIST_ENTRIES[id]!!)
         }
 
-        for (entry in list) {
-            if (OBJECTS_PRODUCTS.containsKey(entry._productId)) continue
+        if(OBJECTS_PRODUCTS.size != 0) {
+            for (entry in list) {
+                if (OBJECTS_PRODUCTS.containsKey(entry._productId)) continue
+                fetchProducts(cached)
+                break
+            }
+        }else{
             fetchProducts(cached)
-            break
         }
 
-        for (entry in list) {
-            if (OBJECTS_QUANTITY_UNITS.containsKey(entry._quantityUnitId)) continue
+        if(OBJECTS_QUANTITY_UNITS.size != 0) {
+            for (entry in list) {
+                if (OBJECTS_QUANTITY_UNITS.containsKey(entry._quantityUnitId)) continue
+                fetchQuantityUnits(cached)
+                break
+            }
+        }else{
             fetchQuantityUnits(cached)
-            break
         }
 
         for (product in list) {
