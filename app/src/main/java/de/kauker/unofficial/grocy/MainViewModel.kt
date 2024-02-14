@@ -29,6 +29,8 @@ class MainViewModel(apiUrl: String, apiToken: String, application: Application) 
     var amoledMode by mutableStateOf(false)
     var ambientMode by mutableStateOf(false)
 
+    var paused by mutableStateOf(false)
+
     /* nav */
     var rootNavController: NavHostController? = null
 

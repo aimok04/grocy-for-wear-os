@@ -68,6 +68,15 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
         }
     }
 
+    override fun onPause() {
+        viewModel?.paused = true
+        super.onPause()
+    }
+
+    override fun onResume() {
+        viewModel?.paused = false
+        super.onResume()
+    }
 
     private lateinit var ambientController: AmbientModeSupport.AmbientController
     override fun getAmbientCallback(): AmbientModeSupport.AmbientCallback = MyAmbientCallback(this)
