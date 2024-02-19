@@ -1,7 +1,5 @@
 package de.kauker.unofficial.grocy.routes
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -18,19 +16,17 @@ import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.RadioButton
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.ToggleChip
-import androidx.wear.compose.material.dialog.Alert
 import com.google.android.horologist.compose.navscaffold.ScaffoldContext
 import de.kauker.unofficial.grocy.MainViewModel
 import de.kauker.unofficial.grocy.R
+import de.kauker.unofficial.grocy.views.RotaryScrollAlert
 
 @Composable
 fun SelectListRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) {
     val vm = mainVM.vmHomeRoute
 
-    Alert(
-        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
+    RotaryScrollAlert(
         scrollState = sc.scrollableState,
-        contentPadding = PaddingValues(start = 10.dp, end = 10.dp, top = 24.dp, bottom = 52.dp),
         icon = {
             Icon(
                 Icons.Rounded.ListAlt,
@@ -45,7 +41,7 @@ fun SelectListRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListSt
                 text = stringResource(id = R.string.select_list_route_title),
                 textAlign = TextAlign.Center
             )
-        },
+        }
     ) {
         items(vm.shoppingLists.size) {
             val list = vm.shoppingLists[it]

@@ -3,10 +3,24 @@ package de.kauker.unofficial.grocy.routes
 import android.app.Activity
 import android.content.Intent
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Copyright
+import androidx.compose.material.icons.rounded.DarkMode
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.ListAlt
+import androidx.compose.material.icons.rounded.Logout
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
@@ -28,7 +42,6 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Switch
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.ToggleChip
-import androidx.wear.compose.material.dialog.Alert
 import androidx.wear.compose.material.dialog.Dialog
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.navscaffold.ScaffoldContext
@@ -36,6 +49,7 @@ import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import de.kauker.unofficial.grocy.MainViewModel
 import de.kauker.unofficial.grocy.R
 import de.kauker.unofficial.grocy.activities.SetupActivity
+import de.kauker.unofficial.grocy.views.RotaryScrollAlert
 
 @OptIn(ExperimentalHorologistApi::class, ExperimentalWearFoundationApi::class)
 @Composable
@@ -44,7 +58,7 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
 
     var showSignOutAlert by remember { mutableStateOf(false) }
     Dialog(showDialog = showSignOutAlert, onDismissRequest = { showSignOutAlert = false }) {
-        AlertSignOut(onClickPrimary = {
+        AlertSignOut(sc, onClickPrimary = {
             showSignOutAlert = false
 
             context.getSharedPreferences("credentials", ComponentActivity.MODE_PRIVATE)
@@ -149,10 +163,9 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
 }
 
 @Composable
-fun AlertSignOut(onClickPrimary: () -> Unit, onClickSecondary: () -> Unit) {
-    Alert(
-        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
-        contentPadding = PaddingValues(start = 10.dp, end = 10.dp, top = 24.dp, bottom = 52.dp),
+fun AlertSignOut(sc: ScaffoldContext<ScalingLazyListState>, onClickPrimary: () -> Unit, onClickSecondary: () -> Unit) {
+    RotaryScrollAlert(
+        scrollState = sc.scrollableState,
         icon = {
             Icon(
                 Icons.Rounded.Logout,

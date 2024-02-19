@@ -23,7 +23,7 @@ fun RotaryScrollAlert(
     modifier: Modifier = Modifier,
     title: @Composable (ColumnScope.() -> Unit),
     icon: @Composable (ColumnScope.() -> Unit),
-    message: @Composable (ColumnScope.() -> Unit),
+    message: @Composable (ColumnScope.() -> Unit)? = null,
     scrollState: ScalingLazyListState,
     content: (ScalingLazyListScope.() -> Unit)
 ) {
