@@ -15,7 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
@@ -75,7 +80,9 @@ class SetupActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = "main"
                     ) {
-                        scalingLazyColumnComposable("main", scrollStateBuilder = { ScalingLazyListState() }) {
+                        scalingLazyColumnComposable(
+                            "main",
+                            scrollStateBuilder = { ScalingLazyListState() }) {
                             SetupComp(this@SetupActivity, viewModel, it)
                         }
                     }
@@ -185,11 +192,11 @@ fun SetupComp(
 
     LaunchedEffect(Unit) {
         val dataClient: DataClient = Wearable.getDataClient(activity)
-        dataClient.addListener{ dataEvents ->
+        dataClient.addListener { dataEvents ->
             dataEvents.forEach { event ->
-                if (event.type == DataEvent.TYPE_CHANGED) {
+                if(event.type == DataEvent.TYPE_CHANGED) {
                     val dataItemPath = event.dataItem.uri.path ?: ""
-                    if (dataItemPath.startsWith("/auth")) {
+                    if(dataItemPath.startsWith("/auth")) {
                         val dataMap = DataMapItem.fromDataItem(event.dataItem).dataMap
 
                         apiUrl = dataMap.getString("url")
@@ -201,8 +208,8 @@ fun SetupComp(
     }
 
     if(apiUrl != null) {
-        SetupConfirmationComp(activity, apiUrl?: "", apiToken?: "", sc)
-    }else{
+        SetupConfirmationComp(activity, apiUrl ?: "", apiToken ?: "", sc)
+    } else {
         val focusRequester = rememberActiveFocusRequester()
 
         ScalingLazyColumn(
@@ -239,7 +246,8 @@ fun SetupComp(
                         label = { Text(stringResource(id = R.string.install)) },
                         colors = ChipDefaults.secondaryChipColors(),
                         onClick = {
-                            val appUrl = if(!GOOGLE_PLAY_VERSION) "https://github.com/aimok04/grocy-for-wear-os/releases/latest" else "https://play.google.com/store/apps/details?id=de.kauker.unofficial.grocy"
+                            val appUrl =
+                                if(!GOOGLE_PLAY_VERSION) "https://github.com/aimok04/grocy-for-wear-os/releases/latest" else "https://play.google.com/store/apps/details?id=de.kauker.unofficial.grocy"
                             vm.openUriRemotely(Uri.parse(appUrl))
                         }
                     )
@@ -263,7 +271,7 @@ class SetupViewModel(application: Application) : AndroidViewModel(
                         .addCategory(Intent.CATEGORY_BROWSABLE)
                         .setData(uri)
                 ).await()
-            } catch (throwable: Throwable) {
+            } catch(throwable: Throwable) {
                 throwable.printStackTrace()
             }
         }

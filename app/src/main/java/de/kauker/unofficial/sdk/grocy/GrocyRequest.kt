@@ -1,6 +1,6 @@
 package de.kauker.unofficial.sdk.grocy
 
-import java.util.*
+import java.util.Date
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response

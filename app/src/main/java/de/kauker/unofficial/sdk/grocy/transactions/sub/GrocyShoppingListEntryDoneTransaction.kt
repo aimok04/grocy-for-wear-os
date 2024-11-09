@@ -10,7 +10,7 @@ import org.json.JSONObject
 class GrocyShoppingListEntryDoneTransaction(
     private val entryId: String,
     private val done: Boolean
-): GrocyTransaction() {
+) : GrocyTransaction() {
 
     override fun apply(grocyClient: GrocyClient) {
         val entry = grocyClient.OBJECTS_SHOPPING_LIST_ENTRIES[entryId]
@@ -25,7 +25,7 @@ class GrocyShoppingListEntryDoneTransaction(
                 "/api/objects/shopping_list/${entryId}",
                 JSONObject().put("done", if(done) "1" else "0").toString()
             ).code.toString().let { it.startsWith("2") || it.startsWith("4") || it.startsWith("5") }
-        } catch (throwable: Throwable) {
+        } catch(throwable: Throwable) {
             throwable.printStackTrace()
         }
 

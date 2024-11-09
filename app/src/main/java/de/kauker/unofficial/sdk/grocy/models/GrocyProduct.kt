@@ -46,17 +46,27 @@ class GrocyProduct(
     var quantityUnitStockId: String?
 ) {
 
-    @Transient var grocyClient: GrocyClient? = null
+    @Transient
+    var grocyClient: GrocyClient? = null
 
     var active: Boolean
-        get() { return _active == "1" }
-        set(value) { _active = if(value) "1" else "0" }
+        get() {
+            return _active == "1"
+        }
+        set(value) {
+            _active = if(value) "1" else "0"
+        }
 
-    @Transient var productGroup: GrocyProductGroup? = null
+    @Transient
+    var productGroup: GrocyProductGroup? = null
 
-    @Transient var location: GrocyLocation? = null
-    @Transient var shoppingLocation: GrocyLocation? = null
-    @Transient var quantityUnitPurchase: GrocyQuantityUnit? = null
-    @Transient var quantityUnitStock: GrocyQuantityUnit? = null
+    @Transient
+    var location: GrocyLocation? = null
+    @Transient
+    var shoppingLocation: GrocyLocation? = null
+    @Transient
+    var quantityUnitPurchase: GrocyQuantityUnit? = null
+    @Transient
+    var quantityUnitStock: GrocyQuantityUnit? = null
 
 }

@@ -15,7 +15,7 @@ class GrocyProductAddToShoppingListTransaction(
     private val productId: String,
     private val listId: String,
     private val amount: Int
-): GrocyTransaction() {
+) : GrocyTransaction() {
 
     private val simulateId: String = UUID.randomUUID().toString()
 
@@ -55,7 +55,7 @@ class GrocyProductAddToShoppingListTransaction(
                 "/api/objects/shopping_list",
                 post.toString()
             ).code.toString().let { it.startsWith("2") || it.startsWith("4") || it.startsWith("5") }
-        } catch (throwable: Throwable) {
+        } catch(throwable: Throwable) {
             throwable.printStackTrace()
         }
 
@@ -64,7 +64,10 @@ class GrocyProductAddToShoppingListTransaction(
 
 }
 
-suspend fun GrocyProduct.addToShoppingList(shoppingList: GrocyShoppingList, amount: Int): GrocyProductAddToShoppingListTransaction? {
+suspend fun GrocyProduct.addToShoppingList(
+    shoppingList: GrocyShoppingList,
+    amount: Int
+): GrocyProductAddToShoppingListTransaction? {
     return this.grocyClient!!.transactionsManager.addTransaction(
         GrocyProductAddToShoppingListTransaction(
             this.id,

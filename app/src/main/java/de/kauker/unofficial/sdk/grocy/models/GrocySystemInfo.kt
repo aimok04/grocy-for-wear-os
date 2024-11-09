@@ -47,5 +47,5 @@ class GrocySystemInfoVersion(
 
 fun GrocyClient.retrieveSystemInfo(): GrocySystemInfo {
     val response = GrocyRequest(this).get("/api/system/info", false)
-    return jsonInstance.decodeFromString<GrocySystemInfo>(response?: "")
+    return jsonInstance.decodeFromString<GrocySystemInfo>(response ?: "")
 }

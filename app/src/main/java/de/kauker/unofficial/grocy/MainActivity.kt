@@ -47,12 +47,14 @@ class MainActivity : FragmentActivity(), AmbientModeSupport.AmbientCallbackProvi
         /* apply predefined api url and token if defined */
         if(GROCY_PREDEFINED_API_URL.isNotEmpty() || GROCY_PREDEFINED_API_TOKEN.isNotEmpty()) {
             val editor = sp.edit()
-            if(GROCY_PREDEFINED_API_URL.isNotEmpty()) sp.edit().putString("apiUrl", GROCY_PREDEFINED_API_URL).apply()
-            if(GROCY_PREDEFINED_API_TOKEN.isNotEmpty()) sp.edit().putString("apiToken", GROCY_PREDEFINED_API_TOKEN).apply()
+            if(GROCY_PREDEFINED_API_URL.isNotEmpty()) sp.edit()
+                .putString("apiUrl", GROCY_PREDEFINED_API_URL).apply()
+            if(GROCY_PREDEFINED_API_TOKEN.isNotEmpty()) sp.edit()
+                .putString("apiToken", GROCY_PREDEFINED_API_TOKEN).apply()
             editor.apply()
         }
 
-        if (!sp.contains("apiUrl") || !sp.contains("apiToken")) {
+        if(!sp.contains("apiUrl") || !sp.contains("apiToken")) {
             startActivity(Intent(this, SetupActivity().javaClass))
             finish()
             return
@@ -112,9 +114,14 @@ fun WearApp(
         Scaffold(
             Modifier.background(MaterialTheme.colors.background)
         ) {
-            fun NavGraphBuilder.defaultListComposable(route: String, comp: @Composable (context: ScaffoldContext<ScalingLazyListState>) -> Unit) {
+            fun NavGraphBuilder.defaultListComposable(
+                route: String,
+                comp: @Composable (context: ScaffoldContext<ScalingLazyListState>) -> Unit
+            ) {
                 @Suppress("DEPRECATION")
-                scalingLazyColumnComposable(route, scrollStateBuilder = { ScalingLazyListState() }) {
+                scalingLazyColumnComposable(
+                    route,
+                    scrollStateBuilder = { ScalingLazyListState() }) {
                     comp(it)
                 }
             }
@@ -130,7 +137,12 @@ fun WearApp(
                 Route("settings") { SettingsRoute(vm = vm, sc = it) },
                 Route("settings/aboutServer") { SettingsAboutServerRoute(vm = vm, sc = it) },
                 Route("settings/legal") { SettingsLegalRoute(sc = it) },
-                Route("settings/productGroupsOrder") { SettingsProductGroupsOrderRoute(mainVM = vm, sc = it) },
+                Route("settings/productGroupsOrder") {
+                    SettingsProductGroupsOrderRoute(
+                        mainVM = vm,
+                        sc = it
+                    )
+                },
 
                 Route("alerts/welcome") { AlertWelcomeRoute(vm = vm, sc = it) },
                 Route("alerts/offline") { AlertOfflineRoute(vm = vm, sc = it) },

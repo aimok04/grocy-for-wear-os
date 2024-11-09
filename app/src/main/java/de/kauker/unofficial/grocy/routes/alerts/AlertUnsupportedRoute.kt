@@ -24,7 +24,7 @@ import de.kauker.unofficial.grocy.views.RotaryScrollAlert
 
 @Composable
 fun AlertUnsupportedRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) {
-    val serverVersion = vm.grocySystemInfo?.grocyVersion?.version?: "Unknown"
+    val serverVersion = vm.grocySystemInfo?.grocyVersion?.version ?: "Unknown"
 
     RotaryScrollAlert(
         scrollState = sc.scrollableState,
@@ -57,7 +57,8 @@ fun AlertUnsupportedRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyList
                     label = { Text(stringResource(id = R.string.close)) },
                     icon = { Icon(Icons.Rounded.Close, stringResource(id = R.string.close)) },
                     onClick = {
-                        vm.settingsSp.edit().putString("latestUnsupportedVersion", serverVersion).apply()
+                        vm.settingsSp.edit().putString("latestUnsupportedVersion", serverVersion)
+                            .apply()
                         vm.rootNavController?.popBackStack()
                     }
                 )

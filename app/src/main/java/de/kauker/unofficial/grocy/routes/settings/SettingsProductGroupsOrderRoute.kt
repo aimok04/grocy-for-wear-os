@@ -52,13 +52,16 @@ import org.json.JSONArray
 
 @OptIn(ExperimentalHorologistApi::class, ExperimentalWearFoundationApi::class)
 @Composable
-fun SettingsProductGroupsOrderRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) {
+fun SettingsProductGroupsOrderRoute(
+    mainVM: MainViewModel,
+    sc: ScaffoldContext<ScalingLazyListState>
+) {
     val vm = mainVM.vmSettingsProductGroupsOrderRoute
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) { vm.load() }
 
-    if (!vm.loaded && !vm.connectionIssue) {
+    if(!vm.loaded && !vm.connectionIssue) {
         CircularProgressIndicator()
     } else {
         val focusRequester = rememberActiveFocusRequester()
@@ -82,7 +85,7 @@ fun SettingsProductGroupsOrderRoute(mainVM: MainViewModel, sc: ScaffoldContext<S
                 )
             }
 
-            if (!vm.connectionIssue) {
+            if(!vm.connectionIssue) {
                 item {
                     CompactChip(
                         label = { Text(stringResource(id = R.string.reset)) },
@@ -104,7 +107,7 @@ fun SettingsProductGroupsOrderRoute(mainVM: MainViewModel, sc: ScaffoldContext<S
                         ) {
                             Text(
                                 modifier = Modifier.weight(1f, true),
-                                text = group.name?: ""
+                                text = group.name ?: ""
                             )
 
                             Row(
@@ -147,7 +150,7 @@ fun SettingsProductGroupsOrderRoute(mainVM: MainViewModel, sc: ScaffoldContext<S
                         }
                     }
                 }
-            } else if (vm.connectionIssue) {
+            } else if(vm.connectionIssue) {
                 item {
                     Text(
                         modifier = Modifier.padding(bottom = 8.dp),
@@ -194,21 +197,21 @@ class SettingsProductGroupsOrderViewModel(
                 mProductGroupList = mProductGroupList.sortedBy { it.name }
 
                 val productGroupById = HashMap<String, GrocyProductGroup>()
-                for (productGroup in mProductGroupList) productGroupById[productGroup.id] =
+                for(productGroup in mProductGroupList) productGroupById[productGroup.id] =
                     productGroup
 
                 val order = settingsSp.getString("productGroupOrder", null)
-                if (order != null) {
+                if(order != null) {
                     val jsonArray = JSONArray(order)
 
-                    for (i in 0 until jsonArray.length()) {
+                    for(i in 0 until jsonArray.length()) {
                         val item = jsonArray.getString(i)
                         mProductGroupList = mProductGroupList.filter { it.id != item }
                     }
 
-                    for (i in 0 until jsonArray.length()) {
+                    for(i in 0 until jsonArray.length()) {
                         val item = jsonArray.getString(i)
-                        if (!productGroupById.containsKey(item)) continue
+                        if(!productGroupById.containsKey(item)) continue
                         mProductGroupList = mProductGroupList + productGroupById[item]!!
                     }
                 }
@@ -217,7 +220,7 @@ class SettingsProductGroupsOrderViewModel(
                 productGroupList.addAll(mProductGroupList)
 
                 loaded = true
-            } catch (throwable: Throwable) {
+            } catch(throwable: Throwable) {
                 throwable.printStackTrace()
                 connectionIssue = true
             }
@@ -225,7 +228,7 @@ class SettingsProductGroupsOrderViewModel(
     }
 
     fun moveUpwards(index: Int) {
-        if (index == 0) return
+        if(index == 0) return
         val group = productGroupList[index]
         productGroupList.removeAt(index)
         productGroupList.add(index - 1, group)
@@ -234,7 +237,7 @@ class SettingsProductGroupsOrderViewModel(
     }
 
     fun moveDownwards(index: Int) {
-        if (index == productGroupList.size - 1) return
+        if(index == productGroupList.size - 1) return
         val group = productGroupList[index]
         productGroupList.removeAt(index)
         productGroupList.add(index + 1, group)
@@ -244,7 +247,7 @@ class SettingsProductGroupsOrderViewModel(
 
     private fun saveOrder() {
         val orderArray = JSONArray()
-        for (productGroup in productGroupList) orderArray.put(productGroup.id)
+        for(productGroup in productGroupList) orderArray.put(productGroup.id)
         settingsSp.edit().putString("productGroupOrder", orderArray.toString()).apply()
     }
 

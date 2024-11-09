@@ -12,7 +12,7 @@ sealed class GrocyTransaction {
     /**
      * "Simulates" transaction outcome
      */
-    open fun apply(grocyClient: GrocyClient) { }
+    open fun apply(grocyClient: GrocyClient) {}
 
     /**
      * Sends request to grocy server if possible

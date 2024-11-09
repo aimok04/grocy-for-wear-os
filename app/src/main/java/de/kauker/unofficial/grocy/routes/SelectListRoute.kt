@@ -50,12 +50,13 @@ fun SelectListRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListSt
                 modifier = Modifier.fillMaxWidth(),
                 checked = list == vm.selectedShoppingList,
                 onCheckedChange = {
-                    vm.vm.settingsSp.edit().putInt("selectedShoppingListId", list.id.toInt()).apply()
+                    vm.vm.settingsSp.edit().putInt("selectedShoppingListId", list.id.toInt())
+                        .apply()
 
                     vm.selectedShoppingList = list
                     vm.vm.rootNavController?.popBackStack()
                 },
-                label = { Text(list.name?: "Unnamed") },
+                label = { Text(list.name ?: "Unnamed") },
                 toggleControl = {
                     RadioButton(
                         selected = list == vm.selectedShoppingList

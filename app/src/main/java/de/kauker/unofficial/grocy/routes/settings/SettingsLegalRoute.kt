@@ -111,7 +111,7 @@ fun SettingsLegalRoute(sc: ScaffoldContext<ScalingLazyListState>) {
                         )
 
                         val developers = ArrayList<String?>()
-                        for (developer in library.developers) developers.add(developer.name)
+                        for(developer in library.developers) developers.add(developer.name)
 
                         Text(
                             text = developers.joinToString(", "),
@@ -123,12 +123,14 @@ fun SettingsLegalRoute(sc: ScaffoldContext<ScalingLazyListState>) {
                         Row(
                             Modifier.padding(top = 8.dp)
                         ) {
-                            for (license in library.licenses) CompactChip(
-                                label = { Text(
-                                    license.name,
-                                    maxLines = 2,
-                                    overflow = TextOverflow.Ellipsis
-                                ) },
+                            for(license in library.licenses) CompactChip(
+                                label = {
+                                    Text(
+                                        license.name,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                },
                                 onClick = { },
                                 colors = ChipDefaults.gradientBackgroundChipColors()
                             )
@@ -146,7 +148,7 @@ fun AlertLegalDetails(
     sc: ScaffoldContext<ScalingLazyListState>,
     onClose: () -> Unit
 ) {
-    if (library == null) return
+    if(library == null) return
 
     RotaryScrollAlert(
         scrollState = sc.scrollableState,
@@ -175,7 +177,7 @@ fun AlertLegalDetails(
                     text = license.name,
                     style = MaterialTheme.typography.title3
                 )
-                if (license.licenseContent != null) {
+                if(license.licenseContent != null) {
                     Text(
                         text = license.licenseContent!!,
                         style = MaterialTheme.typography.caption3

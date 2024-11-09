@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 class GrocyShoppingListEntryDeleteTransaction(
     private val entryId: String
-): GrocyTransaction() {
+) : GrocyTransaction() {
 
     override fun apply(grocyClient: GrocyClient) {
         grocyClient.OBJECTS_SHOPPING_LIST_ENTRIES.remove(entryId)
@@ -20,10 +20,10 @@ class GrocyShoppingListEntryDeleteTransaction(
         try {
             /* accept even when request is not successful */
             return GrocyRequest(grocyClient).delete(
-                "/api/objects/shopping_list/${ entryId }",
+                "/api/objects/shopping_list/${entryId}",
                 "{}"
             ).code.toString().let { it.startsWith("2") || it.startsWith("4") || it.startsWith("5") }
-        } catch (throwable: Throwable) {
+        } catch(throwable: Throwable) {
             throwable.printStackTrace()
         }
 

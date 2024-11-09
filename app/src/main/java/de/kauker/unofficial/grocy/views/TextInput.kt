@@ -15,17 +15,18 @@ fun TextInput(
     onTextReceived: (data: CharSequence) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if(it.resultCode == 0) {
-            onDismiss()
-            return@rememberLauncherForActivityResult
-        }
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if(it.resultCode == 0) {
+                onDismiss()
+                return@rememberLauncherForActivityResult
+            }
 
-        it.data?.let { data ->
-            val results: Bundle = RemoteInput.getResultsFromIntent(data)!!
-            onTextReceived(results.getCharSequence("data")!!)
+            it.data?.let { data ->
+                val results: Bundle = RemoteInput.getResultsFromIntent(data)!!
+                onTextReceived(results.getCharSequence("data")!!)
+            }
         }
-    }
 
     LaunchedEffect(Unit) {
         val intent: Intent = RemoteInputIntentHelper.createActionRemoteInputIntent()

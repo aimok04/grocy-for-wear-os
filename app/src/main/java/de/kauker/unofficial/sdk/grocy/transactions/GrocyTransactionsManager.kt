@@ -22,12 +22,18 @@ class GrocyTransactionsManager(
 ) {
 
     private val transactionList = mutableListOf<GrocyTransaction>()
-    private val transactionStorage = context.getSharedPreferences("transactions", Context.MODE_PRIVATE)
+    private val transactionStorage =
+        context.getSharedPreferences("transactions", Context.MODE_PRIVATE)
 
     private fun loadTransactions() {
         val maxAge = System.currentTimeMillis() - DURATION_MAX_TRANSACTION_AGE
 
-        val jsonArray = jsonInstance.decodeFromString<JsonArray>(transactionStorage.getString("savedTransactions", "[]")?: "[]")
+        val jsonArray = jsonInstance.decodeFromString<JsonArray>(
+            transactionStorage.getString(
+                "savedTransactions",
+                "[]"
+            ) ?: "[]"
+        )
         jsonArray.forEach {
             val transaction = jsonInstance.decodeFromJsonElement<GrocyTransaction>(it)
 
@@ -49,7 +55,7 @@ class GrocyTransactionsManager(
         loadTransactions()
     }
 
-    suspend fun <T: GrocyTransaction> addTransaction(transaction: T): T? {
+    suspend fun <T : GrocyTransaction> addTransaction(transaction: T): T? {
         /* do not allow more than LIMIT_MAX_TRANSACTION_COUNT transactions */
         if(transactionList.count { !it.completed } > LIMIT_MAX_TRANSACTION_COUNT) return null
 
@@ -101,7 +107,7 @@ class GrocyTransactionsManager(
                     saveTransactions()
                 }
 
-                completedTransactionCount ++
+                completedTransactionCount++
                 state(false, totalTransactionCount, completedTransactionCount)
 
                 /* stop sync when taking longer than DURATION_TRANSACTION_SYNC_TIMEOUT */

@@ -11,7 +11,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Done
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
@@ -114,7 +121,9 @@ fun AddProductRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>
 
                     Text(
                         text = value.toString(),
-                        color = if(sc.scrollableState.centerItemIndex != value) LocalContentColor.current.copy(alpha = 0.5f) else LocalContentColor.current,
+                        color = if(sc.scrollableState.centerItemIndex != value) LocalContentColor.current.copy(
+                            alpha = 0.5f
+                        ) else LocalContentColor.current,
                         style = MaterialTheme.typography.display2
                     )
                 }
@@ -124,10 +133,11 @@ fun AddProductRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>
                 modifier = Modifier
                     .offset(x = unitLabelWidth)
                     .onGloballyPositioned {
-                        if (unitLabelWidth > 0.dp) return@onGloballyPositioned
+                        if(unitLabelWidth > 0.dp) return@onGloballyPositioned
                         with(density) { unitLabelWidth = (it.size.width.toDp() + 12.dp) / 2 }
                     },
-                text = (if(sc.scrollableState.centerItemIndex == 1) selectedProduct?.quantityUnitPurchase?.name else selectedProduct?.quantityUnitPurchase?.namePlural)?: "x",
+                text = (if(sc.scrollableState.centerItemIndex == 1) selectedProduct?.quantityUnitPurchase?.name else selectedProduct?.quantityUnitPurchase?.namePlural)
+                    ?: "x",
                 style = Typography.title1
             )
         }
@@ -144,7 +154,10 @@ fun AddProductRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>
                 onClick = {
                     coroutineScope.launch {
                         withContext(Dispatchers.IO) {
-                            selectedProduct!!.addToShoppingList(vm.vmHomeRoute.selectedShoppingList!!, sc.scrollableState.centerItemIndex)
+                            selectedProduct!!.addToShoppingList(
+                                vm.vmHomeRoute.selectedShoppingList!!,
+                                sc.scrollableState.centerItemIndex
+                            )
                             showDoneDialog = true
                         }
                     }
@@ -160,8 +173,13 @@ fun AddProductRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>
         val search = text.toString()
         val searchLower = search.lowercase()
 
-        vm.grocyClient.OBJECTS_PRODUCTS.entries.forEach fE@ {
-            val values: Array<String> = arrayOf(it.value.name, it.value.description?: "", it.value.productGroup?.name?: "", it.value.location?.name?: "")
+        vm.grocyClient.OBJECTS_PRODUCTS.entries.forEach fE@{
+            val values: Array<String> = arrayOf(
+                it.value.name,
+                it.value.description ?: "",
+                it.value.productGroup?.name ?: "",
+                it.value.location?.name ?: ""
+            )
             values.forEach { c1 ->
                 val diff = c1.distanceTo(search)
                 if(diff > 0.6) {
@@ -179,7 +197,7 @@ fun AddProductRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>
         try {
             suggestedProducts.sortBy { it.second }
             suggestedProducts.reverse()
-        }catch(e: Exception) {
+        } catch(e: Exception) {
             e.printStackTrace()
         }
     }
@@ -213,7 +231,7 @@ fun AddProductRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>
                     textAlign = TextAlign.Center
                 )
             }
-        }else{
+        } else {
             items(suggestedProducts.size) {
                 val product = suggestedProducts[it]
 

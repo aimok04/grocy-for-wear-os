@@ -36,7 +36,8 @@ class MainViewModel(apiUrl: String, apiToken: String, application: Application) 
 
     /* vms */
     val vmHomeRoute = HomeViewModel(this, getApplication())
-    val vmSettingsProductGroupsOrderRoute = SettingsProductGroupsOrderViewModel(this, getApplication())
+    val vmSettingsProductGroupsOrderRoute =
+        SettingsProductGroupsOrderViewModel(this, getApplication())
 
     var settingsSp: SharedPreferences = getApplication<Application>().getSharedPreferences(
         "settings",
@@ -53,16 +54,23 @@ class MainViewModel(apiUrl: String, apiToken: String, application: Application) 
             withContext(Dispatchers.IO) {
                 try {
                     grocySystemInfo = grocyClient.retrieveSystemInfo()
-                    if(GROCY_SUPPORTED_VERSIONS.contains(grocySystemInfo?.grocyVersion?.version?: "")) return@withContext
+                    if(GROCY_SUPPORTED_VERSIONS.contains(
+                            grocySystemInfo?.grocyVersion?.version ?: ""
+                        )
+                    ) return@withContext
 
                     /* do not open alert twice */
-                    if(settingsSp.getString("latestUnsupportedVersion", "") == grocySystemInfo?.grocyVersion?.version) return@withContext
+                    if(settingsSp.getString(
+                            "latestUnsupportedVersion",
+                            ""
+                        ) == grocySystemInfo?.grocyVersion?.version
+                    ) return@withContext
 
                     withContext(Dispatchers.Main) {
                         delay(500)
                         rootNavController?.navigate("alerts/unsupported")
                     }
-                }catch(e: Exception) {
+                } catch(e: Exception) {
                     e.printStackTrace()
                 }
             }

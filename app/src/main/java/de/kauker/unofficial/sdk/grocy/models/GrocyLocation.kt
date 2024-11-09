@@ -22,6 +22,8 @@ class GrocyLocation(
     var is_freezer: String?
 ) {
     val isFreezer: Boolean
-        get() { return is_freezer == "1" }
+        get() {
+            return is_freezer == "1"
+        }
 
 }

@@ -38,13 +38,20 @@ class GrocyShoppingListEntry(
     var _quantityUnitId: String?
 ) {
 
-    @Transient var grocyClient: GrocyClient? = null
+    @Transient
+    var grocyClient: GrocyClient? = null
 
-    @Transient var product: GrocyProduct? = null
-    @Transient var quantityUnit: GrocyQuantityUnit? = null
+    @Transient
+    var product: GrocyProduct? = null
+    @Transient
+    var quantityUnit: GrocyQuantityUnit? = null
 
     var done: Boolean
-        get() { return _done == "1" }
-        set(value) { this._done = if(value) "1" else "0" }
+        get() {
+            return _done == "1"
+        }
+        set(value) {
+            this._done = if(value) "1" else "0"
+        }
 
 }

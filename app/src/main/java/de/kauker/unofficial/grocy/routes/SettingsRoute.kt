@@ -99,7 +99,12 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                 modifier = Modifier
                     .padding(top = 16.dp)
                     .fillMaxWidth(),
-                icon = { Icon(Icons.AutoMirrored.Rounded.ListAlt, stringResource(id = R.string.settings_button_product_groups_order)) },
+                icon = {
+                    Icon(
+                        Icons.AutoMirrored.Rounded.ListAlt,
+                        stringResource(id = R.string.settings_button_product_groups_order)
+                    )
+                },
                 label = { Text(stringResource(id = R.string.settings_button_product_groups_order)) },
                 colors = ChipDefaults.primaryChipColors(),
                 onClick = { vm.rootNavController?.navigate("settings/productGroupsOrder") }
@@ -116,7 +121,12 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                     vm.amoledMode = !vm.amoledMode
                     vm.settingsSp.edit().putBoolean("amoledMode", vm.amoledMode).apply()
                 },
-                appIcon = { Icon(Icons.Rounded.DarkMode, stringResource(id = R.string.settings_button_amoled)) },
+                appIcon = {
+                    Icon(
+                        Icons.Rounded.DarkMode,
+                        stringResource(id = R.string.settings_button_amoled)
+                    )
+                },
                 label = { Text(stringResource(id = R.string.settings_button_amoled)) },
                 toggleControl = {
                     Switch(checked = vm.amoledMode)
@@ -129,7 +139,12 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
-                icon = { Icon(Icons.Rounded.Info, stringResource(id = R.string.settings_button_about_server)) },
+                icon = {
+                    Icon(
+                        Icons.Rounded.Info,
+                        stringResource(id = R.string.settings_button_about_server)
+                    )
+                },
                 label = { Text(stringResource(id = R.string.settings_button_about_server)) },
                 colors = ChipDefaults.secondaryChipColors(),
                 onClick = { vm.rootNavController?.navigate("settings/aboutServer") }
@@ -141,7 +156,12 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
-                icon = { Icon(Icons.Rounded.Copyright, stringResource(id = R.string.settings_button_legal_stuff)) },
+                icon = {
+                    Icon(
+                        Icons.Rounded.Copyright,
+                        stringResource(id = R.string.settings_button_legal_stuff)
+                    )
+                },
                 label = { Text(stringResource(id = R.string.settings_button_legal_stuff)) },
                 colors = ChipDefaults.secondaryChipColors(),
                 onClick = { vm.rootNavController?.navigate("settings/legal") }
@@ -153,7 +173,12 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
-                icon = { Icon(Icons.AutoMirrored.Rounded.Logout, stringResource(id = R.string.sign_out)) },
+                icon = {
+                    Icon(
+                        Icons.AutoMirrored.Rounded.Logout,
+                        stringResource(id = R.string.sign_out)
+                    )
+                },
                 label = { Text(stringResource(id = R.string.sign_out)) },
                 colors = ChipDefaults.secondaryChipColors(),
                 onClick = { showSignOutAlert = true }
@@ -163,7 +188,11 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
 }
 
 @Composable
-fun AlertSignOut(sc: ScaffoldContext<ScalingLazyListState>, onClickPrimary: () -> Unit, onClickSecondary: () -> Unit) {
+fun AlertSignOut(
+    sc: ScaffoldContext<ScalingLazyListState>,
+    onClickPrimary: () -> Unit,
+    onClickSecondary: () -> Unit
+) {
     RotaryScrollAlert(
         scrollState = sc.scrollableState,
         icon = {

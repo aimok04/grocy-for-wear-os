@@ -53,10 +53,10 @@ fun SettingsAboutServerRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyL
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
-                label = { Text(vm.grocySystemInfo?.grocyVersion?.version?: "Unknown") },
+                label = { Text(vm.grocySystemInfo?.grocyVersion?.version ?: "Unknown") },
                 secondaryLabel = { Text("Grocy version") },
                 colors = ChipDefaults.primaryChipColors(),
-                onClick = {  }
+                onClick = { }
             )
         }
 
@@ -65,10 +65,10 @@ fun SettingsAboutServerRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyL
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
-                label = { Text(vm.grocySystemInfo?.grocyVersion?.releaseDate?: "Unknown") },
+                label = { Text(vm.grocySystemInfo?.grocyVersion?.releaseDate ?: "Unknown") },
                 secondaryLabel = { Text("Release date") },
                 colors = ChipDefaults.secondaryChipColors(),
-                onClick = {  }
+                onClick = { }
             )
         }
 
@@ -81,10 +81,10 @@ fun SettingsAboutServerRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyL
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
-                label = { Text(vm.grocySystemInfo?.phpVersion?: "Unknown") },
+                label = { Text(vm.grocySystemInfo?.phpVersion ?: "Unknown") },
                 secondaryLabel = { Text("PHP version") },
                 colors = ChipDefaults.secondaryChipColors(),
-                onClick = {  }
+                onClick = { }
             )
         }
 
@@ -93,10 +93,10 @@ fun SettingsAboutServerRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyL
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
-                label = { Text(vm.grocySystemInfo?.sqlliteVersion?: "Unknown") },
+                label = { Text(vm.grocySystemInfo?.sqlliteVersion ?: "Unknown") },
                 secondaryLabel = { Text("SqlLite version") },
                 colors = ChipDefaults.secondaryChipColors(),
-                onClick = {  }
+                onClick = { }
             )
         }
 
@@ -105,10 +105,10 @@ fun SettingsAboutServerRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyL
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
-                label = { Text(vm.grocySystemInfo?.os?: "Unknown") },
+                label = { Text(vm.grocySystemInfo?.os ?: "Unknown") },
                 secondaryLabel = { Text("Operating system") },
                 colors = ChipDefaults.secondaryChipColors(),
-                onClick = {  }
+                onClick = { }
             )
         }
 
@@ -117,10 +117,10 @@ fun SettingsAboutServerRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyL
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
-                label = { Text(vm.grocySystemInfo?.client?: "Unknown") },
+                label = { Text(vm.grocySystemInfo?.client ?: "Unknown") },
                 secondaryLabel = { Text("Client") },
                 colors = ChipDefaults.secondaryChipColors(),
-                onClick = {  }
+                onClick = { }
             )
         }
     }

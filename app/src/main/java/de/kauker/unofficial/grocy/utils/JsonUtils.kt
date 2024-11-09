@@ -11,7 +11,8 @@ import kotlinx.serialization.json.jsonPrimitive
 @OptIn(ExperimentalSerializationApi::class)
 val jsonInstance = Json { ignoreUnknownKeys = true; encodeDefaults = true; explicitNulls = false }
 
-object JsonAsStringSerializer: JsonTransformingSerializer<String>(tSerializer = String.serializer()) {
+object JsonAsStringSerializer :
+    JsonTransformingSerializer<String>(tSerializer = String.serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement {
         return JsonPrimitive(value = element.jsonPrimitive.content)
     }

@@ -104,7 +104,11 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
 
     LaunchedEffect(Unit) {
         if(mainVM.settingsSp.getBoolean("wasWelcomed", false)) {
-            if(mainVM.settingsSp.getBoolean("wasIntroducedToOfflineFeatures", false)) return@LaunchedEffect
+            if(mainVM.settingsSp.getBoolean(
+                    "wasIntroducedToOfflineFeatures",
+                    false
+                )
+            ) return@LaunchedEffect
 
             mainVM.rootNavController?.navigate("alerts/offline")
             mainVM.settingsSp.edit().putBoolean("wasIntroducedToOfflineFeatures", true).apply()
@@ -117,7 +121,7 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
         mainVM.settingsSp.edit().putBoolean("wasIntroducedToOfflineFeatures", true).apply()
     }
 
-    if (!vm.loaded && !vm.connectionIssues) {
+    if(!vm.loaded && !vm.connectionIssues) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -139,7 +143,10 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
             if(!vm.connectionIssues && vm.cachedDate != null) {
                 item {
                     Column {
-                        val dateStr = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(vm.cachedDate!!)
+                        val dateStr = SimpleDateFormat.getDateTimeInstance(
+                            SimpleDateFormat.SHORT,
+                            SimpleDateFormat.SHORT
+                        ).format(vm.cachedDate!!)
 
                         Text(
                             modifier = Modifier
@@ -185,7 +192,8 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                 LaunchedEffect(vm.transactionSyncCompletedCount, vm.transactionSyncTotalCount) {
                     if(vm.transactionSyncFailed) return@LaunchedEffect
 
-                    val newValue = vm.transactionSyncCompletedCount.toFloat() / vm.transactionSyncTotalCount.toFloat()
+                    val newValue =
+                        vm.transactionSyncCompletedCount.toFloat() / vm.transactionSyncTotalCount.toFloat()
                     progressAnimatable.animateTo(newValue, tween(durationMillis = 250))
 
                     if(newValue != 1f) return@LaunchedEffect
@@ -204,21 +212,24 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                     )
 
                     Icon(
-                        modifier = Modifier.scale((1f - finishedAnimatable.value).takeIf { it > 0f }?: 0f),
+                        modifier = Modifier.scale((1f - finishedAnimatable.value).takeIf { it > 0f }
+                            ?: 0f),
                         imageVector = Icons.Rounded.SyncAlt,
                         contentDescription = stringResource(id = R.string.main_sync_ongoing)
                     )
 
                     if(vm.transactionSyncFailed) {
                         Icon(
-                            modifier = Modifier.scale((finishedAnimatable.value - 1f).takeIf { it > 0f }?: 0f),
+                            modifier = Modifier.scale((finishedAnimatable.value - 1f).takeIf { it > 0f }
+                                ?: 0f),
                             imageVector = Icons.Rounded.Close,
                             contentDescription = stringResource(id = R.string.main_sync_failed),
                             tint = MaterialTheme.colors.error
                         )
-                    }else{
+                    } else {
                         Icon(
-                            modifier = Modifier.scale((finishedAnimatable.value - 1f).takeIf { it > 0f }?: 0f),
+                            modifier = Modifier.scale((finishedAnimatable.value - 1f).takeIf { it > 0f }
+                                ?: 0f),
                             imageVector = Icons.Rounded.Done,
                             contentDescription = stringResource(id = R.string.main_sync_done),
                             tint = MaterialTheme.colors.primary
@@ -232,13 +243,14 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = if (!vm.connectionIssues && vm.cachedDate != null) 4.dp else 22.dp),
+                        .padding(top = if(!vm.connectionIssues && vm.cachedDate != null) 4.dp else 22.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         modifier = Modifier.clickable { vm.vm.rootNavController?.navigate("selectList") },
-                        text = vm.selectedShoppingList?.name?: stringResource(id = R.string.main_title),
+                        text = vm.selectedShoppingList?.name
+                            ?: stringResource(id = R.string.main_title),
                         style = MaterialTheme.typography.title2
                             .copy(fontWeight = FontWeight.Bold),
                         textAlign = TextAlign.Center
@@ -284,7 +296,7 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                 }
             }
 
-            if (vm.connectionIssues) {
+            if(vm.connectionIssues) {
                 /* display connection issue error */
                 item {
                     Text(
@@ -308,12 +320,12 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                             fontStyle = FontStyle.Italic
                         )
                     }
-                }else{
+                } else {
                     /* display items in shopping list */
                     items(vm.shoppingListItems.size) {
                         val item = vm.shoppingListItems[it]
 
-                        if (item is ShoppingListTitleEntry) {
+                        if(item is ShoppingListTitleEntry) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
@@ -321,7 +333,7 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(top = 16.dp),
-                                    text = if (item.title != null) item.title!! else stringResource(
+                                    text = if(item.title != null) item.title!! else stringResource(
                                         id = item.titleId!!
                                     ),
                                     style = MaterialTheme.typography.body2,
@@ -330,13 +342,18 @@ fun HomeRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
 
                                 if(item.titleId == R.string.main_list_done) {
                                     CompactChip(
-                                        icon = { Icon(Icons.Rounded.Delete, stringResource(id = R.string.delete_all)) },
+                                        icon = {
+                                            Icon(
+                                                Icons.Rounded.Delete,
+                                                stringResource(id = R.string.delete_all)
+                                            )
+                                        },
                                         label = { Text(stringResource(id = R.string.delete_all)) },
                                         onClick = { vm.vm.rootNavController?.navigate("delete/done") }
                                     )
                                 }
                             }
-                        } else if (item is ShoppingListGrocyItemEntry) {
+                        } else if(item is ShoppingListGrocyItemEntry) {
                             ShoppingListEntryCard(item = item, vm = vm)
                         }
                     }
@@ -352,7 +369,7 @@ fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
     val density = LocalDensity.current
 
     val entry = item.entry
-    val alpha = if (entry.done && !vm.vm.ambientMode) 0.5f else 1f
+    val alpha = if(entry.done && !vm.vm.ambientMode) 0.5f else 1f
 
     var showMoreOptionsOverlay by remember { mutableStateOf(false) }
 
@@ -362,7 +379,7 @@ fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
         Box(
             Modifier
                 .background(
-                    if (vm.vm.ambientMode) MaterialTheme.colors.onPrimary else Color.Transparent,
+                    if(vm.vm.ambientMode) MaterialTheme.colors.onPrimary else Color.Transparent,
                     MaterialTheme.shapes.large
                 )
                 .padding(1.dp)
@@ -375,15 +392,18 @@ fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
                     .onGloballyPositioned {
                         size = with(density) { DpSize(it.size.width.toDp(), it.size.height.toDp()) }
                     },
-                title = { Text(entry.product?.name?: entry.note?: "Unknown item") },
+                title = { Text(entry.product?.name ?: entry.note ?: "Unknown item") },
                 backgroundPainter =
-                    if(vm.vm.ambientMode) CardDefaults.cardBackgroundPainter(Color.Black, Color.Black) else CardDefaults.cardBackgroundPainter(),
+                if(vm.vm.ambientMode) CardDefaults.cardBackgroundPainter(
+                    Color.Black,
+                    Color.Black
+                ) else CardDefaults.cardBackgroundPainter(),
                 onClick = { },
                 enabled = false
             ) {
                 if(entry.product != null && entry.note?.isNotEmpty() == true) {
                     Text(
-                        entry.note?: "",
+                        entry.note ?: "",
                         fontSize = 12.sp,
                         fontFamily = FontFamily.Serif,
                         fontStyle = FontStyle.Italic
@@ -391,7 +411,7 @@ fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
                 }
 
                 val quantityUnit =
-                    if (entry.quantityUnit == null) "" else if (entry.amount == "1") entry.quantityUnit?.name else entry.quantityUnit?.namePlural
+                    if(entry.quantityUnit == null) "" else if(entry.amount == "1") entry.quantityUnit?.name else entry.quantityUnit?.namePlural
                 Text(entry.amount + " " + quantityUnit)
             }
 
@@ -400,11 +420,11 @@ fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
                 Modifier
                     .size(size)
                     .clip(MaterialTheme.shapes.large)
-                    .background(if (showMoreOptionsOverlay) Color.Black.copy(alpha = 0.5f) else Color.Transparent)
+                    .background(if(showMoreOptionsOverlay) Color.Black.copy(alpha = 0.5f) else Color.Transparent)
                     .combinedClickable(onLongClick = {
                         showMoreOptionsOverlay = !showMoreOptionsOverlay
                     }) {
-                        if (showMoreOptionsOverlay) {
+                        if(showMoreOptionsOverlay) {
                             showMoreOptionsOverlay = false
                             return@combinedClickable
                         }
@@ -416,8 +436,13 @@ fun ShoppingListEntryCard(vm: HomeViewModel, item: ShoppingListGrocyItemEntry) {
                 if(!showMoreOptionsOverlay) return
 
                 CompactButton(
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error, contentColor = MaterialTheme.colors.onError),
-                    onClick = { vm.deleteShoppingListEntry(item.entry); showMoreOptionsOverlay = false }
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.error,
+                        contentColor = MaterialTheme.colors.onError
+                    ),
+                    onClick = {
+                        vm.deleteShoppingListEntry(item.entry); showMoreOptionsOverlay = false
+                    }
                 ) {
                     Icon(Icons.Rounded.Delete, stringResource(id = R.string.delete))
                 }
@@ -454,7 +479,7 @@ class HomeViewModel(
                         vm.grocyClient.transactionsManager.applyAll(false)
 
                         reloadUi()
-                    } catch (throwable: Throwable) {
+                    } catch(throwable: Throwable) {
                         throwable.printStackTrace()
                     }
                 }
@@ -494,10 +519,10 @@ class HomeViewModel(
                         }
 
                         cachedDate = null
-                    } catch (throwable: Throwable) {
+                    } catch(throwable: Throwable) {
                         throwable.printStackTrace()
                     }
-                } catch (throwable: Throwable) {
+                } catch(throwable: Throwable) {
                     throwable.printStackTrace()
                     connectionIssues = true
                 }
@@ -510,7 +535,10 @@ class HomeViewModel(
         shoppingLists.addAll(vm.grocyClient.shoppingLists)
 
         /* get selected list, replaced with first list if its null */
-        selectedShoppingList = vm.grocyClient.OBJECTS_SHOPPING_LISTS[vm.settingsSp.getInt("selectedShoppingListId", -1)]?: shoppingLists[0]
+        selectedShoppingList = vm.grocyClient.OBJECTS_SHOPPING_LISTS[vm.settingsSp.getInt(
+            "selectedShoppingListId",
+            -1
+        )] ?: shoppingLists[0]
 
         val mShoppingListItems = mutableListOf<ShoppingListEntry>()
 
@@ -518,20 +546,20 @@ class HomeViewModel(
         val unsorted = ArrayList<GrocyShoppingListEntry>()
         val done = ArrayList<GrocyShoppingListEntry>()
 
-        for (entry in vm.grocyClient.shoppingListEntries) {
+        for(entry in vm.grocyClient.shoppingListEntries) {
             if(entry.shoppingListId != selectedShoppingList?.id) continue
 
-            if (entry.done) {
+            if(entry.done) {
                 done.add(entry)
                 continue
             }
 
-            if (entry.product?.productGroup == null) {
+            if(entry.product?.productGroup == null) {
                 unsorted.add(entry)
                 continue
             }
 
-            if (!sectionsMap.containsKey(entry.product!!.productGroup))
+            if(!sectionsMap.containsKey(entry.product!!.productGroup))
                 sectionsMap[entry.product!!.productGroup!!] = ArrayList()
 
             sectionsMap[entry.product!!.productGroup!!]!!.add(entry)
@@ -539,44 +567,44 @@ class HomeViewModel(
 
         /* sorting by alphabet and applying custom order if available */
         val groupMap = HashMap<String, GrocyProductGroup>()
-        for (group in sectionsMap.keys) groupMap[group.id] = group
+        for(group in sectionsMap.keys) groupMap[group.id] = group
 
         var groupOrder = sectionsMap.keys.toList()
         groupOrder = groupOrder.sortedBy { it.name }
 
         val order = vm.settingsSp.getString("productGroupOrder", null)
-        if (order != null) {
+        if(order != null) {
             val jsonArray = JSONArray(order)
 
-            for (i in 0 until jsonArray.length()) {
+            for(i in 0 until jsonArray.length()) {
                 val item = jsonArray.getString(i)
                 groupOrder = groupOrder.filter { it.id != item }
             }
 
-            for (i in 0 until jsonArray.length()) {
+            for(i in 0 until jsonArray.length()) {
                 val item = jsonArray.getString(i)
-                if (!groupMap.containsKey(item)) continue
+                if(!groupMap.containsKey(item)) continue
                 groupOrder = groupOrder + groupMap[item]!!
             }
         }
 
-        if (unsorted.size != 0) {
+        if(unsorted.size != 0) {
             mShoppingListItems.add(ShoppingListTitleEntry(titleId = R.string.main_list_unsorted))
-            for (entry in unsorted) mShoppingListItems.add(ShoppingListGrocyItemEntry(entry))
+            for(entry in unsorted) mShoppingListItems.add(ShoppingListGrocyItemEntry(entry))
         }
 
-        for (group in groupOrder) {
-            mShoppingListItems.add(ShoppingListTitleEntry(title = group.name?: ""))
-            for (entry in sectionsMap[group]!!) mShoppingListItems.add(
+        for(group in groupOrder) {
+            mShoppingListItems.add(ShoppingListTitleEntry(title = group.name ?: ""))
+            for(entry in sectionsMap[group]!!) mShoppingListItems.add(
                 ShoppingListGrocyItemEntry(
                     entry
                 )
             )
         }
 
-        if (done.size != 0) {
+        if(done.size != 0) {
             mShoppingListItems.add(ShoppingListTitleEntry(titleId = R.string.main_list_done))
-            for (entry in done) mShoppingListItems.add(ShoppingListGrocyItemEntry(entry))
+            for(entry in done) mShoppingListItems.add(ShoppingListGrocyItemEntry(entry))
         }
 
         loaded = true
