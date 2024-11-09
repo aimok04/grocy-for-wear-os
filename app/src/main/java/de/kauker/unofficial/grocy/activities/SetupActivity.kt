@@ -249,7 +249,7 @@ fun SetupComp(
     }
 }
 
-class SetupViewModel constructor(application: Application) : AndroidViewModel(
+class SetupViewModel(application: Application) : AndroidViewModel(
     application
 ) {
 

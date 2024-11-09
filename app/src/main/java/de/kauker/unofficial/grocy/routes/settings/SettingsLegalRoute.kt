@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.MenuBook
+import androidx.compose.material.icons.automirrored.rounded.MenuBook
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -152,7 +152,7 @@ fun AlertLegalDetails(
         scrollState = sc.scrollableState,
         icon = {
             Icon(
-                Icons.Rounded.MenuBook,
+                Icons.AutoMirrored.Rounded.MenuBook,
                 contentDescription = stringResource(id = R.string.legal_title),
                 modifier = Modifier
                     .size(24.dp)

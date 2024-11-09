@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ListAlt
+import androidx.compose.material.icons.automirrored.rounded.ListAlt
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +29,7 @@ fun SelectListRoute(mainVM: MainViewModel, sc: ScaffoldContext<ScalingLazyListSt
         scrollState = sc.scrollableState,
         icon = {
             Icon(
-                Icons.Rounded.ListAlt,
+                Icons.AutoMirrored.Rounded.ListAlt,
                 contentDescription = stringResource(id = R.string.select_list_route_title),
                 modifier = Modifier
                     .size(24.dp)

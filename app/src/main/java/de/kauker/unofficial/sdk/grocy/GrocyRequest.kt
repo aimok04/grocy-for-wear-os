@@ -5,13 +5,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 
-class GrocyRequest(grocyClient: GrocyClient) {
-
-    private val grocyClient: GrocyClient
-
-    init {
-        this.grocyClient = grocyClient
-    }
+class GrocyRequest(private val grocyClient: GrocyClient) {
 
     fun get(endpoint: String, cached: Boolean): String? {
         val url = grocyClient.serverUrl + endpoint

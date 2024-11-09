@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MainViewModel constructor(application: Application) : AndroidViewModel(
+class MainViewModel(application: Application) : AndroidViewModel(
     application
 ) {
 

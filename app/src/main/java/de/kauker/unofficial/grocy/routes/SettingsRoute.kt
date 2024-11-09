@@ -9,13 +9,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ListAlt
+import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Copyright
 import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material.icons.rounded.ListAlt
-import androidx.compose.material.icons.rounded.Logout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -99,7 +99,7 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                 modifier = Modifier
                     .padding(top = 16.dp)
                     .fillMaxWidth(),
-                icon = { Icon(Icons.Rounded.ListAlt, stringResource(id = R.string.settings_button_product_groups_order)) },
+                icon = { Icon(Icons.AutoMirrored.Rounded.ListAlt, stringResource(id = R.string.settings_button_product_groups_order)) },
                 label = { Text(stringResource(id = R.string.settings_button_product_groups_order)) },
                 colors = ChipDefaults.primaryChipColors(),
                 onClick = { vm.rootNavController?.navigate("settings/productGroupsOrder") }
@@ -153,7 +153,7 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
-                icon = { Icon(Icons.Rounded.Logout, stringResource(id = R.string.sign_out)) },
+                icon = { Icon(Icons.AutoMirrored.Rounded.Logout, stringResource(id = R.string.sign_out)) },
                 label = { Text(stringResource(id = R.string.sign_out)) },
                 colors = ChipDefaults.secondaryChipColors(),
                 onClick = { showSignOutAlert = true }
@@ -168,7 +168,7 @@ fun AlertSignOut(sc: ScaffoldContext<ScalingLazyListState>, onClickPrimary: () -
         scrollState = sc.scrollableState,
         icon = {
             Icon(
-                Icons.Rounded.Logout,
+                Icons.AutoMirrored.Rounded.Logout,
                 contentDescription = stringResource(id = R.string.sign_out),
                 modifier = Modifier
                     .size(24.dp)

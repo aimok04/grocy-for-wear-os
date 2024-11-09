@@ -161,7 +161,7 @@ fun SettingsProductGroupsOrderRoute(mainVM: MainViewModel, sc: ScaffoldContext<S
     }
 }
 
-class SettingsProductGroupsOrderViewModel constructor(
+class SettingsProductGroupsOrderViewModel(
     private val vm: MainViewModel,
     application: Application
 ) : AndroidViewModel(
