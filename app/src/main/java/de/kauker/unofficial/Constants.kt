@@ -6,7 +6,7 @@ const val GROCY_PREDEFINED_API_URL = ""
 const val GROCY_PREDEFINED_API_TOKEN = ""
 
 val GROCY_SUPPORTED_VERSIONS = listOf(
-    "4.0.0", "4.0.1", "4.0.2", "4.0.3", "4.1.0"
+    "4.0.0", "4.0.1", "4.0.2", "4.0.3", "4.1.0", "4.2.0"
 )
 
 const val DURATION_TRANSACTION_SYNC_TIMEOUT = 10 * 1000
