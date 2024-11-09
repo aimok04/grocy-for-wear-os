@@ -1,8 +1,8 @@
 package de.kauker.unofficial.grocy.routes.settings
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +11,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.Refresh
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
@@ -169,7 +175,7 @@ class SettingsProductGroupsOrderViewModel constructor(
 
     private var settingsSp: SharedPreferences = getApplication<Application>().getSharedPreferences(
         "settings",
-        ComponentActivity.MODE_PRIVATE
+        Context.MODE_PRIVATE
     )
 
     fun load() {

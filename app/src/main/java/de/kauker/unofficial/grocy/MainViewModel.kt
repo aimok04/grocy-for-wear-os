@@ -1,8 +1,8 @@
 package de.kauker.unofficial.grocy
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
-import androidx.activity.ComponentActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -40,7 +40,7 @@ class MainViewModel(apiUrl: String, apiToken: String, application: Application) 
 
     var settingsSp: SharedPreferences = getApplication<Application>().getSharedPreferences(
         "settings",
-        ComponentActivity.MODE_PRIVATE
+        Context.MODE_PRIVATE
     )
 
     var grocyClient = GrocyClient(application, apiUrl, apiToken)

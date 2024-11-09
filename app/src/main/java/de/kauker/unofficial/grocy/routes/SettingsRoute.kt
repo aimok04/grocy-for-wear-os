@@ -1,8 +1,8 @@
 package de.kauker.unofficial.grocy.routes
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -61,7 +61,7 @@ fun SettingsRoute(vm: MainViewModel, sc: ScaffoldContext<ScalingLazyListState>) 
         AlertSignOut(sc, onClickPrimary = {
             showSignOutAlert = false
 
-            context.getSharedPreferences("credentials", ComponentActivity.MODE_PRIVATE)
+            context.getSharedPreferences("credentials", Context.MODE_PRIVATE)
                 .edit().remove("apiUrl").remove("apiToken").apply()
 
             vm.settingsSp.edit().remove("latestUnsupportedVersion").apply()

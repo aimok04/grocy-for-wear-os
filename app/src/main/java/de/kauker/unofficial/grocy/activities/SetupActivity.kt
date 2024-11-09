@@ -2,6 +2,7 @@ package de.kauker.unofficial.grocy.activities
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -144,7 +145,7 @@ fun SetupConfirmationComp(
                     onClick = {
                         val sp = activity.getSharedPreferences(
                             "credentials",
-                            ComponentActivity.MODE_PRIVATE
+                            Context.MODE_PRIVATE
                         )
                         sp.edit().putString("apiUrl", apiUrl)
                             .putString("apiToken", apiToken).apply()
