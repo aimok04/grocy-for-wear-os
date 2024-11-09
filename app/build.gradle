@@ -16,8 +16,8 @@ android {
     targetSdk 35
 
     /* syntax: [ versionName (xxx) ] [ revision (x) ] [ module (app = 2, companion = 4) ] [ platform (github = 1, google play = 3) ] */
-    versionCode 180021
-    versionName "1.8"
+    versionCode 190021
+    versionName "1.9"
 
     vectorDrawables {
       useSupportLibrary true
